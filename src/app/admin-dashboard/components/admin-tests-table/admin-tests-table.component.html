@@ -1,0 +1,303 @@
+<div class="flex justify-between items-center mb-6">
+  <div>
+    <h1 class="text-2xl font-semibold text-gray-800">Tests</h1>
+    <p class="text-sm text-gray-500">Manage the tests available on the platform.</p>
+  </div>
+  <p-button (onClick)="openModal()" label="New Test">
+    <ng-template pTemplate="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="text-white">
+        <path fill="currentColor"
+          d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z"
+          stroke-width="0.9" stroke="currentColor"></path>
+      </svg>
+    </ng-template>
+  </p-button>
+</div>
+
+
+<p-dialog [(visible)]="dialog" [style]="{ width: '40rem' }" header="Create Test" [modal]="true" [closable]="true" (onHide)="resetForm()">
+  <form [formGroup]="testForm" class="p-0" (ngSubmit)="onSubmit()" >
+    <div class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+
+      <input type="hidden" formControlName="id" />
+
+      <!-- Test Name -->
+      <div class="sm:col-span-6">
+        <label for="test-name" class="block text-sm font-medium text-gray-700">
+          Test Name <span class="text-red-500">*</span>
+        </label>
+        <input type="text" placeholder="Enter test name" formControlName="name"
+          [class.border-red-500]="testForm.get('name')?.errors ?? false"
+          class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:ring-primary" />
+        <form-error-label [control]="testForm.get('name')!" />
+      </div>
+
+      <!-- Description -->
+      <div class="sm:col-span-6">
+        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea rows="3" placeholder="Enter test description" formControlName="description"
+          [class.border-red-500]="testForm.get('description')?.errors ?? false"
+          class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:ring-primary"></textarea>
+        <form-error-label [control]="testForm.get('description')!" />
+      </div>
+
+      <!-- Test Type -->
+      <div class="sm:col-span-6">
+        <label for="test-type" class="block text-sm font-medium text-gray-700">
+          Test Type <span class="text-red-500">*</span>
+        </label>
+
+        <select formControlName="type" [class.border-red-500]="testForm.get('type')?.errors ?? false"
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary">
+          @for (type of testTypeOptions; track type.value) {
+          <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+
+        <form-error-label [control]="testForm.get('type')!" />
+      </div>
+
+
+      <!-- Image -->
+      <div class="sm:col-span-6">
+        <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">
+          Test Image <span class="text-red-500">*</span>
+        </label>
+
+        <div [class.border-red-500]="testForm.get('imageUrl')?.errors ?? false"
+          class="border-2 border-dashed border-gray-300 rounded-md p-6 text-center relative"
+          [class.bg-purple-50]="isDragOver()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)">
+          <!-- Vista previa -->
+          <div *ngIf="previewImage()" class="mb-4 relative">
+            <img [src]="previewImage()" alt="Preview" class="max-h-40 mx-auto rounded-md" />
+            <!-- Botón eliminar en la esquina superior derecha -->
+            <button type="button" (click)="clearImage()" aria-label="Remove image" title="Remove image"
+              class="absolute top-1 right-1 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-0 text-gray-700 rounded-full w-5 h-5 flex items-center justify-center transition-colors duration-150">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                aria-hidden="true" focusable="false">
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+
+
+          </div>
+
+          <!-- Sin imagen -->
+          <div *ngIf="!previewImage()" class="space-y-2">
+            <button type="button"
+              class="mt-4 mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 text-primary relative"
+              (click)="fileInput.click()" aria-label="Choose file" title="Choose file">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
+                class="w-6 h-6">
+                <path
+                  d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z" />
+                <path
+                  d="M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0z" />
+              </svg>
+            </button>
+
+            <p class="text-sm text-gray-500">
+              Drag an image or <span class="text-primary font-medium">browse</span>
+            </p>
+            <p class="text-xs text-gray-400">JPG, JPEG, PNG or GIF(max. 2MB)</p>
+          </div>
+
+          <!-- Input oculto -->
+          <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFilesChanged($event)" />
+        </div>
+        <form-error-label [control]="testForm.get('type')!" />
+      </div>
+
+    </div>
+    <!-- Footer buttons -->
+    <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+      <button type="button" (click)="closeModal()"
+        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Cancelar
+      </button>
+      <button type="submit"
+        class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+        <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m15.3 5.3l-6.8 6.8l-2.8-2.8l-1.4 1.4l4.2 4.2l8.2-8.2z" />
+        </svg>
+        Guardar
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
+
+
+<p-table #dt [value]="testsResource.value()!" [paginator]="true" [rows]="pageSize()" [totalRecords]="totalRecords"
+  [lazy]="true" (onLazyLoad)="loadTestsLazy($event)" (onFilter)="onTableFilter($event)" [loading]="loading()"
+  [sortField]="sortField()" [sortOrder]="sortDescending() ? -1 : 1">
+
+  <!-- HEADER -->
+  <ng-template pTemplate="header">
+    <tr>
+
+      <th scope="col" pSortableColumn="name"
+        class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Test Name
+      </th>
+      <th scope="col" pSortableColumn="description"
+        class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Description
+      </th>
+      <th scope="col" pSortableColumn="category"
+        class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Type
+      </th>
+      <th scope="col" pSortableColumn="createdAt"
+        class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Created Date
+      </th>
+      <th scope="col"
+        class="bg-gray-50 px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+        Actions
+      </th>
+    </tr>
+  </ng-template>
+
+  <!-- BODY -->
+  <ng-template pTemplate="body" let-test>
+    <tr class="table-row cursor-pointer">
+
+      <td class="px-6 py-4 whitespace-nowrap">
+        <div class="flex items-center">
+          <div class="">
+            <img [src]="test.imageUrl | testImage" [alt]="test.name" class="w-24 rounded">
+          </div>
+          <div class="ml-4">
+            <div class="text-sm text-gray-900">{{ test.name }}</div>
+          </div>
+        </div>
+      </td>
+      <td class="px-6 py-4 align-top">
+        <div class="text-sm text-gray-900 break-words max-w-xs whitespace-normal text-start">
+          {{test.description}}
+        </div>
+      </td>
+      <td class="px-6 py-4 whitespace-nowrap">
+        <div class="flex items-center">
+          <div [ngClass]="{
+            'bg-indigo-100 text-indigo-600': test.type === TestType.IQ,
+            'bg-purple-100 text-purple-600': test.type === TestType.Personality || test.type === TestType.Other,
+            'bg-red-100 text-red-600': test.type === TestType.Skills
+          }" class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full">
+            <div class="w-5 h-5 flex items-center justify-center">
+              @switch (test.type) {
+              @case (TestType.IQ) {
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4">
+                  <path d="M12 5a3 3 0 1 0-5.997.125a4 4 0 0 0-2.526 5.77a4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+                  <path d="M12 5a3 3 0 1 1 5.997.125a4 4 0 0 1 2.526 5.77a4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+                  <path
+                    d="M15 13a4.5 4.5 0 0 1-3-4a4.5 4.5 0 0 1-3 4m8.599-6.5a3 3 0 0 0 .399-1.375m-11.995 0A3 3 0 0 0 6.401 6.5m-2.924 4.396a4 4 0 0 1 .585-.396m15.876 0a4 4 0 0 1 .585.396M6 18a4 4 0 0 1-1.967-.516m15.934 0A4 4 0 0 1 18 18" />
+                </g>
+              </svg>
+              }
+              @case (TestType.Personality) {
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" stroke-width="2">
+                <path fill="currentColor"
+                  d="M6 22v-4.3q-1.425-1.3-2.212-3.037T3 11q0-3.75 2.625-6.375T12 2q3.125 0 5.538 1.838t3.137 4.787l1.3 5.125q.125.475-.175.863T21 15h-2v3q0 .825-.587 1.413T17 20h-2v2h-2v-4h4v-5h2.7l-.95-3.875q-.575-2.275-2.45-3.7T12 4Q9.1 4 7.05 6.025T5 10.95q0 1.5.613 2.85t1.737 2.4l.65.6V22zm6-6q.425 0 .713-.288T13 15t-.288-.712T12 14t-.712.288T11 15t.288.713T12 16m-.75-3.2h1.525q0-.625.163-1.012t.662-.938q.45-.5.875-1.012T14.9 8.5q0-1.05-.812-1.775T12.075 6q-1 0-1.812.575t-1.138 1.5l1.375.575q.175-.55.613-.888t.962-.337q.55 0 .913.3t.362.775q0 .525-.312.938t-.738.837q-.5.525-.775 1.05T11.25 12.8" />
+              </svg>
+              }
+              @case (TestType.Skills) {
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" stroke-width="2">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M12 9.8V20m0-10.2c0-1.704.107-3.584-1.638-4.473C9.72 5 8.88 5 7.2 5H4.6C3.364 5 3 5.437 3 6.6v8.8c0 .568-.036 1.195.546 1.491c.214.109.493.109 1.052.109H7.43c2.377 0 3.26 1.036 4.569 3m0-10.2c0-1.704-.108-3.584 1.638-4.473C14.279 5 15.12 5 16.8 5h2.6c1.235 0 1.6.436 1.6 1.6v8.8c0 .567.035 1.195-.546 1.491c-.213.109-.493.109-1.052.109h-2.833c-2.377 0-3.26 1.036-4.57 3" />
+              </svg>
+              }
+              @default{
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 48 48">
+                <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4" />
+              </svg>
+              }
+              }
+            </div>
+          </div>
+          <div class="ml-4">
+            <div class="text-sm text-gray-900">{{TestType[test.type]}}</div>
+          </div>
+        </div>
+      </td>
+
+      <td class="px-6 py-4 whitespace-nowrap">
+        <div class="text-sm text-gray-900">{{test.createdAt | date: 'MMM d, y'}}</div>
+      </td>
+
+      <td class="px-6 py-4 text-right text-sm font-medium">
+        <div class="relative inline-block text-left">
+          <div class="flex-shrink-0 ml-4 flex space-x-2">
+            <button class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-500 rounded"
+              (click)="editItem(test.id)" aria-label="Editar test">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                  <path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21h18">
+                    <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="20;0" />
+                  </path>
+                  <path stroke-dasharray="48" stroke-dashoffset="48" d="M7 17v-4l10 -10l4 4l-10 10h-4">
+                    <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.6s" values="48;0" />
+                  </path>
+                  <path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6l4 4">
+                    <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" values="8;0" />
+                  </path>
+                </g>
+              </svg>
+            </button>
+            <button (click)="openDeleteModal(test.id)"
+              class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-500 rounded"
+              aria-label="Otro botón">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
+                <path fill="currentColor"
+                  d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zm-7 11q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17M7 6v13z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </td>
+
+    </tr>
+  </ng-template>
+
+
+</p-table>
+
+<p-toast />
+
+<!-- Modal -->
+<div *ngIf="showDeleteModal()" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg w-full max-w-md shadow-lg">
+    <div class="p-6">
+      <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 mx-auto mb-4">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
+            <path fill="currentColor"
+              d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zm-7 11q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17M7 6v13z">
+            </path>
+          </svg>
+        </div>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-800 text-center mb-2">Delete user?</h3>
+      <p class="text-sm text-gray-500 text-center mb-6">
+        This action cannot be undone. The user will immediately lose access and all data will be deleted.
+      </p>
+      <div class="flex justify-center space-x-3">
+        <button (click)="closeDeleteModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded whitespace-nowrap">
+          Cancel
+        </button>
+        <button (click)="confirmDeleteConfirmed()"
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded whitespace-nowrap">
+          Confirm deletion
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

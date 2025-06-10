@@ -1,0 +1,45 @@
+<div class="bg-white border-b border-gray-200 sticky top-0 pt-5 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center text-gray-700">
+          <div class="w-5 h-5 flex items-center justify-center mr-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                <circle cx="8" cy="8" r="6.25" />
+                <path d="M8.25 4.75v3.5l-2.5 2" />
+              </g>
+            </svg>
+          </div>
+          <span class="font-medium" id="timer">{{formattedTime()}}</span>
+        </div>
+        <div class="hidden sm:flex items-center text-gray-700">
+          <div class="w-5 h-5 flex items-center justify-center mr-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor" fill-rule="evenodd"
+                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-1-4h2v2h-2zm0-1.992s2-.008 2 0C13 13.006 16 12 16 10c0-2.21-1.773-4-3.991-4A4 4 0 0 0 8 10h2c0-1.1.9-2 2-2s2 .9 2 2c0 .9-3 2.367-3 4.008" />
+            </svg>
+          </div>
+          <span class="font-medium"><span id="current-question">{{currentQuestion()}}</span>/<span
+              id="total-questions">{{totalQuestion()}}</span></span>
+        </div>
+      </div>
+      <div class="flex-1 mx-4 hidden sm:block">
+        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full bg-primary rounded-full timer-progress" id="progress-bar" [style.width]="percent() + '%'">
+          </div>
+        </div>
+      </div>
+      <button class="px-4 py-2 bg-white border border-gray-300 rounded-btn text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 whitespace-nowrap"
+        [routerLink]="['/']">
+        Exit
+      </button>
+      @if (this.testResultService.resultId !== null) {
+      <button class="px-4 py-2 bg-white border border-gray-300 rounded-btn text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 whitespace-nowrap"
+        (click)="onResults()">
+        Results
+      </button>
+      }
+    </div>
+  </div>
+</div>

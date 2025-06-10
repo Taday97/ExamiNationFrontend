@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer base {
+  @font-face {
+    font-family: "Montserrat";
+    src: url('/assests/fonts/montserrat-alternates/montserratAlternates-medium.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: "Pacifico";
+    src: url('/assests/fonts/pacifico/pacifico-regular.ttf');
+  }
+}

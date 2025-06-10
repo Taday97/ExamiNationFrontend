@@ -1,0 +1,37 @@
+<div class="bg-white rounded-lg shadow-sm p-4 mb-2">
+  <div class="question-container active mb-6" id="question-1">
+    <div class="mb-4">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-lg font-medium text-gray-900">Question {{question().questionNumber}}</h2>
+        <!-- <span class="text-sm text-gray-500">1 point</span> -->
+      </div>
+      <p class="text-gray-800 mb-2">{{question().text}}</p>
+      <div class="space-y-3">
+        @for (option of question().options; track $index) {
+        <label class="flex items-start p-3 border border-gray-200 rounded-md hover:border-primary cursor-pointer"
+          [ngClass]="{
+          'border-violet-600 bg-violet-50 shadow-md': selectedOption() === option.id,
+          'border-gray-300 bg-white': selectedOption() !== option.id
+          }">
+          <div class="mr-3 mt-1">
+            <input type="radio" [value]="option.id" name="q1" class="form-radio text-blue-600"
+              (click)="onOptionSelect(option.id)" [checked]="selectedOption() === option.id" />
+          </div>
+          <span class="text-gray-800">{{ option.text }}</span>
+        </label>
+        }
+      </div>
+    </div>
+  </div>
+  <!-- @if (showSaveButton()) {
+  <div class="w-full flex justify-end">
+    <button
+      class="inline-flex items-end px-4 py-2 border border-transparent text-sm font-medium rounded-btn shadow-sm text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
+      (click)="onSave()">
+      Continue
+    </button>
+
+  </div>
+  } -->
+
+</div>

@@ -1,0 +1,16 @@
+<body class="bg-gray-50 min-h-screen">
+
+  <test-progress [currentQuestion]="paginationService.currentPage()"
+    [totalQuestion]="questionsResource.value()?.totalCount ?? 0" [time]="time" ></test-progress>
+
+  <div class="max-w-3xl mx-auto px-2 sm:px-4 lg:px-4 py-2 animate-fadeIn">
+
+    @if (test()!=null && questionsResource.value()!=null) {
+    <test-introduction [test]="test()!" [questionsNumber]="questionsResource.value()?.totalCount ?? 0">
+    </test-introduction>
+    }
+    @for ( question of questionsResource.value()?.items; track $index) {
+    <question-card [question]=question (optionSelect)="onOptionSelected($event)"></question-card>
+    }
+    <question-navigation [pages]="countPage()!" [currentPage]="paginationService.currentPage()"></question-navigation>
+  </div>

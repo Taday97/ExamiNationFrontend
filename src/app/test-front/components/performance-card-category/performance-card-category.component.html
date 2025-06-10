@@ -1,0 +1,31 @@
+<!-- Contenedor principal -->
+<div class="flex justify-between items-center" [ngClass]="{
+    'mb-1 space-x-1': size === 'small',
+    'mb-2 space-x-2': size !== 'small',
+    'text-xs': size === 'small'
+  }">
+  <!-- Parte izquierda -->
+  <div class="flex items-center" [ngClass]="size === 'small' ? 'space-x-1' : 'space-x-2'">
+    <div class="rounded-full flex items-center justify-center"
+      [ngClass]="size === 'small' ? 'w-2 h-2 mr-1' : 'w-3 h-3 mr-2'" [style.backgroundColor]="getRandomColor(index())">
+    </div>
+    <span [ngClass]="size === 'small'
+        ? 'text-xs text-gray-700 leading-tight'
+        : 'font-medium text-gray-900'">
+      {{ category().name }}
+    </span>
+  </div>
+
+  <!-- Parte derecha -->
+  <span [ngClass]="size === 'small'
+      ? 'text-xs font-medium text-gray-900 leading-tight'
+      : 'text-sm font-semibold'" [style.color]="getRandomColor(index())">
+    {{ category().percentageCorrect }}%
+  </span>
+</div>
+
+<!-- Barra de progreso -->
+<div class="bg-gray-200 rounded-full" [ngClass]="size === 'small' ? 'h-1.5 mb-2' : 'h-2 mb-4'">
+  <div class="rounded-full" [ngClass]="size === 'small' ? 'h-1.5' : 'h-2'"
+    [style.width.%]="category().percentageCorrect" [style.backgroundColor]="getRandomColor(index())"></div>
+</div>

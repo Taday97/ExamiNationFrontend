@@ -1,0 +1,113 @@
+<body class="bg-gray-50 min-h-screen">
+  <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div class="text-center">
+        <a href="https://readdy.ai/home/537befe1-627c-4194-9156-2f2fc1826d72/71522694-b909-4f3d-b333-86ec60ca3b45"
+          data-readdy="true" class="inline-block">
+          <span class="text-4xl font-pacifico text-primary">ExamiNation</span>
+        </a>
+        <h2 class="text-3xl font-bold text-base-content" id="form-title">
+          Sign in to your account
+        </h2>
+        <p class="mt-2 text-sm text-gray-600" id="form-description">
+          Or
+          <button type="button" class="font-medium text-primary hover:text-primary/90" [routerLink]="['/auth/register']"
+            routerLinkActive="router-link-active">
+            create a new account
+          </button>
+        </p>
+      </div>
+
+      <div class="bg-white py-8 px-4 shadow-lg rounded-xl sm:px-10 border border-gray-100">
+        <form class="space-y-6" id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div>
+            <label for="signup-email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <div class="mt-1">
+              <input id="signup-email" name="email" type="email" autocomplete="email" required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                placeholder="Enter your email" formControlName="email" required />
+            </div>
+
+            <ng-container *ngIf="loginForm.get('email') as emailCtrl">
+              <div *ngIf="emailCtrl.errors?.['required'] && emailCtrl.touched" class="text-red-600 text-sm mt-1">
+                Email is required
+              </div>
+              <div *ngIf="emailCtrl.errors?.['email'] && emailCtrl.touched" class="text-red-600 text-sm mt-1">
+                Please enter a valid email address
+              </div>
+              <div *ngIf="emailCtrl.valid && emailCtrl.touched" class="text-green-600 text-sm mt-1">
+                Email looks valid!
+              </div>
+            </ng-container>
+          </div>
+
+          <div>
+            <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+            <div class="mt-1">
+              <div class="relative">
+                <input id="signup-password" name="password" [type]="showPassword ? 'text' : 'password'"
+                  autocomplete="new-password" required
+                  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                  placeholder="Enter your password" formControlName="password" />
+
+                <!-- Ojito (icono clickeable) -->
+                <button type="button" (click)="togglePasswordVisibility()"
+                  class="absolute right-2 top-2.5 text-gray-500 hover:text-gray-700 focus:outline-none">
+                  <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.957 9.957 0 012.284-3.568M15 12a3 3 0 00-3-3m3 3a3 3 0 01-3 3m0 0a3 3 0 01-3-3m0 0a3 3 0 013-3m0 0L3 3m18 18l-1.5-1.5" />
+                  </svg>
+                </button>
+              </div>
+
+            </div>
+
+            <ng-container *ngIf="loginForm.get('password') as passwordCtrl">
+              <div *ngIf="passwordCtrl.errors?.['required'] && passwordCtrl.touched" class="text-red-600 text-sm mt-1">
+                Password is required
+              </div>
+              <div *ngIf="passwordCtrl.errors?.['minlength'] && passwordCtrl.touched" class="text-red-600 text-sm mt-1">
+                Password must be at least 8 characters long
+              </div>
+              <div *ngIf="passwordCtrl.valid && passwordCtrl.touched" class="text-green-600 text-sm mt-1">
+                Password meets requirements!
+              </div>
+            </ng-container>
+          </div>
+
+          <div>
+            <button type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+              Sign in
+            </button>
+          </div>
+          @if(hasError()){
+          <div role="alert" class="alert alert-error animate-fadeIn fix bottom-5 right-5 ">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Please review the information entered.</span>
+          </div>
+          }
+          <div>
+            <app-google-login-button (loginSuccess)="onGoogleToken($event)" (loginError)="onGoogleError($event)">
+            </app-google-login-button>
+          </div>
+        </form>
+
+        <form class="space-y-6 hidden" id="signupForm">
+        </form>
+      </div>
+    </div>
+  </main>
+</body>

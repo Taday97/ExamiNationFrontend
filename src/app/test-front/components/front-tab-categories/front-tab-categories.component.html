@@ -1,0 +1,10 @@
+
+<div class="flex justify-center mb-8">
+  <div role="tablist" class="tabs tabs-boxed">
+    <a role="tab" class="tab" [routerLink]="['']" routerLinkActive="tab-active" [routerLinkActiveOptions]="{exact: true}">All</a>
+    <a role="tab" class="tab" [routerLink]="['/test', testType.IQ]" routerLinkActive="tab-active">IQ</a>
+    <a role="tab" class="tab" [routerLink]="['/test', testType.Personality]" routerLinkActive="tab-active">Personality</a>
+    <a role="tab" class="tab" [routerLink]="['/test', testType.Skills]" routerLinkActive="tab-active">Skills</a>
+    <a role="tab" class="tab" [routerLink]="['/test', testType.Other]" routerLinkActive="tab-active">Other</a>
+  </div>
+</div>

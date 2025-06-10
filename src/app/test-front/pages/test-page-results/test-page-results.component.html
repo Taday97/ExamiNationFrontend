@@ -1,0 +1,152 @@
+<div class="bg-gray-50 min-h-screen faid-in">
+  <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+    <div class="w-full max-w-4xl mx-auto">
+      <div class="bg-white py-8 px-4 shadow-lg rounded-xl sm:px-10 border border-gray-100">
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-10">
+          <!-- Score Section -->
+          <!-- Círculo con borde de color y sin fondo -->
+          <div
+            class="score-circle w-48 h-48 rounded-full flex flex-col items-center justify-center shadow-lg border-8 border-primary text-center px-2">
+            <span class="text-gray-500 text-sm mb-1">Correct Answers</span>
+            <span class="text-5xl font-bold text-gray-900">{{testsResultResource.value()?.testResultDto?.score}}</span>
+            <span class="text-primary font-medium mt-2 text-sm leading-tight break-words">
+              {{testsResultResource.value()?.classification}}
+            </span>
+          </div>
+
+          <!-- Results Section -->
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-4">
+              <h1 class="text-2xl font-bold text-gray-900">
+                IQ Test Results
+              </h1>
+              <span class="text-gray-500 text-sm">Completed on {{
+                testsResultResource.value()?.testResultDto?.completedAt| date: 'MMMM d, y' }}</span>
+            </div>
+
+            <!-- Results Message -->
+            <div class="bg-blue-50 border-l-4 border-primary p-4 rounded mb-6 text-justify">
+              <p class="text-gray-700">
+                Number of Correct Answers <span
+                  class="font-semibold">{{testsResultResource.value()?.testResultDto?.score}}</span> places
+                you in the <span
+                  class="font-semibold text-primary">{{testsResultResource.value()?.classification}}</span>
+                {{testsResultResource.value()?.shortDescription}}
+              </p>
+            </div>
+
+            <!-- Performance Details -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center mb-2">
+                  <div class="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="1.5">
+                        <circle cx="8" cy="8" r="6.25"></circle>
+                        <path d="M8.25 4.75v3.5l-2.5 2"></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <h3 class="font-medium text-gray-900">Test Duration</h3>
+                </div>
+                <p class="text-gray-600 ml-11">{{testDuration}}</p>
+              </div>
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center mb-2">
+                  <div class="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                      <path fill="currentColor" fill-rule="evenodd"
+                        d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-1-4h2v2h-2zm0-1.992s2-.008 2 0C13 13.006 16 12 16 10c0-2.21-1.773-4-3.991-4A4 4 0 0 0 8 10h2c0-1.1.9-2 2-2s2 .9 2 2c0 .9-3 2.367-3 4.008">
+                      </path>
+                    </svg>
+                  </div>
+                  <h3 class="font-medium text-gray-900">Questions</h3>
+                </div>
+                <p class="text-gray-600 ml-11">{{testsResultResource.value()?.countAnswers}} of
+                  {{testsResultResource.value()?.countQuestions}} completed</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-gray-200 my-8"></div>
+
+        <!-- Performance by Category -->
+        <div class="mb-10">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Performance by Category</h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            @for (categoryResult of testsResultResource.value()?.categoryResults; track $index) {
+            <div>
+              <app-performance-card-category [category]="categoryResult" [index]=$index></app-performance-card-category>
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="mb-10">
+          <h2 class="text-xl font-semibold text-gray-950 mb-6">What Your Score Means</h2>
+
+          <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-justify">
+            <p class="text-gray-700 mb-4">People with IQ scores in the
+              {{testsResultResource.value()?.minScore}}- {{testsResultResource.value()?.maxScore}} range often
+              demonstrate:</p>
+
+            <ul class="space-y-3">
+              @for (item of explanationList; track $index) {
+              <li class="flex items-start">
+                <div class="w-5 h-5 flex items-center justify-center bg-primary rounded-full mr-3 mt-0.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
+                    <path fill="#fff" fill-rule="evenodd"
+                      d="M13.488 3.43a.75.75 0 0 1 .081 1.058l-6 7a.75.75 0 0 1-1.1.042l-3.5-3.5A.75.75 0 0 1 4.03 6.97l2.928 2.927l5.473-6.385a.75.75 0 0 1 1.057-.081"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <span class="text-gray-700">{{item}}</span>
+              </li>
+              }
+            </ul>
+
+            <div class="mt-6 p-4 bg-blue-50 border-l-4 border-primary rounded">
+              <p class="text-gray-700 text-sm text-justify"><span class="font-semibold">
+                  Remember:
+                </span> The score shown here is based on your performance
+                in the {{testsResultResource.value()?.testName}} questions and does not represent a formal
+                IQ score. IQ tests measure intelligence in a broader context
+                and require standardized scoring.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <!-- <button
+            class="bg-primary text-white px-5 py-2.5 font-medium rounded-lg hover:bg-opacity-90 transition duration-200 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M17.65 6.35A7.96 7.96 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"
+                stroke-width="0.3" stroke="currentColor" />
+            </svg>
+            <span>Retake Test</span>
+          </button> -->
+
+          <button
+            class="border-2 border-primary text-primary px-6 py-3 font-medium rounded-lg hover:bg-primary hover:bg-opacity-10 transition duration-200 whitespace-nowrap cursor-pointer flex items-center space-x-2"
+            [routerLink]="['/#tests']">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 20 24">
+              <path fill="currentColor"
+                d="M19.638 8.945c0-.228-.07-.439-.19-.613l.002.004l-.06-.08l-.005-.006a1 1 0 0 0-.063-.069l-.01-.01l-.028-.029L11.462.321a1 1 0 0 0-.07-.063l-.022-.02l-.054-.04l-.027-.019l-.058-.035l-.025-.015l-.081-.039l-.034-.014l-.054-.02l-.039-.012l-.061-.016l-.031-.007l-.092-.014H1.092C.492.007.005.491.001 1.09v21.818c0 .603.489 1.091 1.091 1.091h17.454c.603 0 1.091-.489 1.091-1.091V8.973zM11.781 3.72l4.13 4.135h-4.13zM2.182 21.818V2.181h7.42v6.767c0 .603.489 1.091 1.091 1.091h6.767v11.779z"
+                stroke-width="0.3" stroke="currentColor" />
+              <path fill="currentColor"
+                d="M13.454 17.454H6.15a1.091 1.091 0 0 0 0 2.182h.032h-.002h7.304a1.091 1.091 0 0 0 0-2.182h-.032zm0-4.363H6.15a1.091 1.091 0 0 0 0 2.182h.032h-.002h7.304a1.091 1.091 0 0 0 0-2.182h-.032z"
+                stroke-width="0.3" stroke="currentColor" />
+            </svg>
+            <span>Explore Other Tests</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

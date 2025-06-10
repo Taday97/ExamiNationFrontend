@@ -1,0 +1,109 @@
+<body class="bg-gray-50 min-h-screen">
+  <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div class="text-center">
+        <a href="#" class="inline-block">
+          <span class="text-4xl font-pacifico text-primary">ExamiNation</span>
+        </a>
+        <h2 class="text-3xl font-bold text-base-content" id="form-title">
+          Create your account
+        </h2>
+      </div>
+
+      <div class="bg-white py-8 px-4 shadow-lg rounded-xl sm:px-10 border border-gray-100">
+        <form class="space-y-6" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+          <div>
+            <label for="signup-username" class="block text-sm font-medium text-gray-700">Username</label>
+            <div class="mt-1">
+              <input id="signup-username" name="username" type="text" autocomplete="username" required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                placeholder="Enter your username" formControlName="username" required />
+            </div>
+
+            <ng-container *ngIf="signupForm.get('username') as usernameCtrl">
+              <div *ngIf="usernameCtrl.errors?.['required'] && usernameCtrl.touched" class="text-red-600 text-sm mt-1">
+                This field is required
+              </div>
+              <div *ngIf="usernameCtrl.errors?.['minlength'] && usernameCtrl.touched" class="text-red-600 text-sm mt-1">
+                Username must be at least 3 characters long
+              </div>
+              <div *ngIf="usernameCtrl.errors?.['maxlength'] && usernameCtrl.touched" class="text-red-600 text-sm mt-1">
+                Username cannot exceed 20 characters
+              </div>
+              <div *ngIf="usernameCtrl.errors?.['pattern'] && usernameCtrl.touched" class="text-red-600 text-sm mt-1">
+                Username can only contain letters, numbers, and underscores
+              </div>
+              <div *ngIf="usernameCtrl.valid && usernameCtrl.touched" class="text-green-600 text-sm mt-1">
+                Looks good!
+              </div>
+            </ng-container>
+          </div>
+
+          <div>
+            <label for="signup-email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <div class="mt-1">
+              <input id="signup-email" name="email" type="email" autocomplete="email" required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                placeholder="Enter your email" formControlName="email" required />
+            </div>
+
+            <ng-container *ngIf="signupForm.get('email') as emailCtrl">
+              <div *ngIf="emailCtrl.errors?.['required'] && emailCtrl.touched" class="text-red-600 text-sm mt-1">
+                Email is required
+              </div>
+              <div *ngIf="emailCtrl.errors?.['email'] && emailCtrl.touched" class="text-red-600 text-sm mt-1">
+                Please enter a valid email address
+              </div>
+              <div *ngIf="emailCtrl.valid && emailCtrl.touched" class="text-green-600 text-sm mt-1">
+                Email looks valid!
+              </div>
+            </ng-container>
+          </div>
+
+          <div>
+            <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+            <div class="mt-1">
+              <input id="signup-password" name="password" type="password" autocomplete="new-password" required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+                placeholder="Create a password" formControlName="password" required />
+            </div>
+
+            <ng-container *ngIf="signupForm.get('password') as passwordCtrl">
+              <div *ngIf="passwordCtrl.errors?.['required'] && passwordCtrl.touched" class="text-red-600 text-sm mt-1">
+                Password is required
+              </div>
+              <div *ngIf="passwordCtrl.errors?.['minlength'] && passwordCtrl.touched" class="text-red-600 text-sm mt-1">
+                Password must be at least 8 characters long
+              </div>
+              <div *ngIf="passwordCtrl.valid && passwordCtrl.touched" class="text-green-600 text-sm mt-1">
+                Password meets requirements!
+              </div>
+            </ng-container>
+          </div>
+
+          <div>
+            <button type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+              Create account
+            </button>
+          </div>
+          @if(hasError()){
+          <div role="alert" class="alert alert-error animate-fadeIn fix bottom-5 right-5 ">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Porfavor revise la informacion ingresada.</span>
+          </div>
+          }
+           <div>
+            <app-google-login-button (loginSuccess)="onGoogleToken($event)" (loginError)="onGoogleError($event)">
+            </app-google-login-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>

@@ -1,0 +1,36 @@
+
+<div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow animate-fadeIn">
+  <div class="h-40 bg-gradient-to-r from-blue-500 to-indigo-600 relative">
+    <img
+      [src]="test().imageUrl | testImage"
+       class="w-full h-full object-cover object-top">
+
+  </div>
+  <div class="p-6">
+    <div class="flex items-center mb-2">
+      <span
+      [ngClass]="{
+        'bg-blue-100 text-blue-800': test().type === testType.IQ,
+        'bg-orange-100 text-orange-900': test().type === testType.Personality,
+        'bg-green-100 text-green-800': test().type === testType.Skills,
+        'bg-red-100 text-red-800': test().type === testType.Other,
+      }"
+      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+      {{testType[test().type]}}
+    </span>
+
+
+    </div>
+    <h3 class="text-lg font-semibold text-gray-900">{{test().name}}</h3>
+    <p class="mt-2 text-sm text-gray-600">
+     {{test().description}}
+    </p>
+    <div class="mt-4 flex items-center justify-end">
+      <button
+        [routerLink]="['/test',test().id,'start']"
+        class="inline-flex items-end px-4 py-2 border border-transparent text-sm font-medium rounded-btn shadow-sm text-white bg-primary hover:bg-primary/90 whitespace-nowrap">
+        Start Test
+      </button>
+    </div>
+  </div>
+</div>

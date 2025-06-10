@@ -1,0 +1,24 @@
+<div class="bg-white rounded-lg shadow-sm p-4 mb-3">
+  <div class="mb-4">
+    <div class="flex flex-wrap gap-2">
+      <button
+        class="question-number active w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-sm font-medium"
+         [routerLink]="[]" [queryParams]="{ page: this.currentPage() - 1 }"
+        (click)="prevPage()" [disabled]="disablePrevButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m11.5 14.5l-4-4l4-4" stroke-width="1"/></svg>
+      </button>
+      @for ( page of getPagesList() ; track $index) {
+      <button
+        class="question-number active w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-sm font-medium"
+        [class.btn-primary]="page === activePage()" [routerLink]="[]" [queryParams]="{ page: page }"
+        (click)="activePage.set(page)">{{page}}</button>
+      }
+      <button
+        class="question-number active w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-sm font-medium"
+        [routerLink]="[]" [queryParams]="{ page: this.currentPage() + 1 }"
+        (click)="nextPage()" [disabled]="disableNextButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m9.5 14.5l4-4l-4-4" stroke-width="1"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
