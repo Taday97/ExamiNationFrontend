@@ -14,7 +14,7 @@ export class HomePageComponent {
    testsResource=rxResource({
     request:()=>({}),
     loader:({request})=>{
-      return this.testsService.getTest();
+      return this.testsService.getAll();
     }
    })
 

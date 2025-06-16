@@ -1,17 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Options } from '@test/interfaces/option.interface';
-import { QuestionsResponse } from '@test/interfaces/question.interface';
+import { PagesResponse } from '@test/interfaces/pages-response.interface';
+import {
+  Questions,
+  QuestionsResponse,
+} from '@test/interfaces/question.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Question, Filters } from '../interfaces/question.interface';
+import { IDeleteService } from './interfaces/delete-service.interface';
 
 const baseUrl = environment.baseUrl;
 
 @Injectable({ providedIn: 'root' })
-export class QuestionsService {
+export class QuestionsService implements IDeleteService<QuestionsResponse> {
   constructor() {}
+
   private http = inject(HttpClient);
 
+  delete(id: string): Observable<QuestionsResponse> {
+    return this.http.delete<QuestionsResponse>(`${baseUrl}/Question/${id}`);
+  }
   getQuetionsPage(option: Options): Observable<QuestionsResponse> {
     const {
       filters = {},
@@ -39,6 +49,31 @@ export class QuestionsService {
       })
       .pipe(tap((resp) => console.log('page' + resp.data.questions.filters)));
   }
+  getPage(option: Options): Observable<PagesResponse<Questions>> {
+    const {
+      filters = {},
+      sortBy = '',
+      sortDescending = false,
+      pageNumber = 1,
+      pageSize = 10,
+    } = option;
 
+    const params: { [key: string]: string } = {
+      SortBy: sortBy,
+      SortDescending: String(sortDescending),
+      PageNumber: String(pageNumber),
+      PageSize: String(pageSize),
+    };
 
+    for (const key in filters) {
+      if (filters.hasOwnProperty(key)) {
+        params[`filters[${key}]`] = filters[key];
+      }
+    }
+    return this.http
+      .get<PagesResponse<Questions>>(`${baseUrl}/question/pages`, {
+        params,
+      })
+      .pipe(tap((resp) => console.log('page' + resp.data.filters)));
+  }
 }

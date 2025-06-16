@@ -9,6 +9,7 @@ import { Options } from '../interfaces/option.interface';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { inject, Injectable } from '@angular/core';
+import { IDeleteService } from './interfaces/delete-service.interface';
 
 const baseUrl = environment.baseUrl;
 
@@ -22,15 +23,35 @@ const emptyTest: Test = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class TestsService {
+export class TestsService
+  implements IDeleteService<TestsResponse>
+{
   private http = inject(HttpClient);
+
+  getAll(): Observable<TestsResponse> {
+    return this.http
+      .get<TestsResponse>(`${baseUrl}/test`)
+      .pipe(tap((resp) => console.log(resp)));
+  }
+
+  getById(id: string): Observable<Test> {
+    if (id === 'new') {
+      return of(emptyTest);
+    }
+    return this.http.get<Test>(`${baseUrl}/Test/${id}`);
+  }
+
+  delete(id: string): Observable<TestsResponse> {
+    return this.http.delete<TestsResponse>(`${baseUrl}/Test/${id}`);
+  }
 
   getTestByType(type: number): Observable<TestsResponse> {
     return this.http
       .get<TestsResponse>(`${baseUrl}/test/by-type/${type}`, {})
       .pipe(tap((resp) => console.log(resp)));
   }
-  getTestPage(option: Options): Observable<TestPagesResponse> {
+
+  getPage(option: Options): Observable<TestPagesResponse> {
     const {
       filters = {},
       sortBy = '',
@@ -52,23 +73,16 @@ export class TestsService {
       }
     }
     return this.http
-      .get<TestPagesResponse>(`${baseUrl}/test/get-pages`, {
+      .get<TestPagesResponse>(`${baseUrl}/Test/pages`, {
         params,
       })
       .pipe(tap((resp) => console.log('page' + resp.data.filters.type)));
-  }
-
-  getTest(): Observable<TestsResponse> {
-    return this.http
-      .get<TestsResponse>(`${baseUrl}/test`)
-      .pipe(tap((resp) => console.log(resp)));
   }
 
   private buildFormData(imageFile?: File | null): FormData {
     const formData = new FormData();
 
     if (imageFile) {
-      // Solo se acepta 1 imagen como 'ImageUrl'
       formData.append('ImageUrl', imageFile);
     }
 
@@ -117,12 +131,6 @@ export class TestsService {
     return this.http.put<Test>(url, formData);
   }
 
-  getTestById(id: string): Observable<Test> {
-    if (id === 'new') {
-      return of(emptyTest);
-    }
-    return this.http.get<Test>(`${baseUrl}/Test/${id}`);
-  }
   deleteTest(id: string): Observable<TestsResponse> {
     return this.http.delete<TestsResponse>(`${baseUrl}/Test/${id}`);
   }

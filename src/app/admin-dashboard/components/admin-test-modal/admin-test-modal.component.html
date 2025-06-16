@@ -1,0 +1,115 @@
+<p-dialog [(visible)]="dialog" [style]="{ width: '40rem' }" header="Create Test" [modal]="true" [closable]="true" (onHide)="resetForm()">
+  <form [formGroup]="testForm" class="p-0" (ngSubmit)="onSubmit()" >
+    <div class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+
+      <input type="hidden" formControlName="id" />
+
+      <!-- Test Name -->
+      <div class="sm:col-span-6">
+        <label for="test-name" class="block text-sm font-medium text-gray-700">
+          Test Name <span class="text-red-500">*</span>
+        </label>
+        <input type="text" placeholder="Enter test name" formControlName="name"
+          [class.border-red-500]="testForm.get('name')?.errors ?? false"
+          class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:ring-primary" />
+        <form-error-label [control]="testForm.get('name')!" />
+      </div>
+
+      <!-- Description -->
+      <div class="sm:col-span-6">
+        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea rows="3" placeholder="Enter test description" formControlName="description"
+          [class.border-red-500]="testForm.get('description')?.errors ?? false"
+          class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-primary focus:ring-primary"></textarea>
+        <form-error-label [control]="testForm.get('description')!" />
+      </div>
+
+      <!-- Test Type -->
+      <div class="sm:col-span-6">
+        <label for="test-type" class="block text-sm font-medium text-gray-700">
+          Test Type <span class="text-red-500">*</span>
+        </label>
+
+        <select formControlName="type" [class.border-red-500]="testForm.get('type')?.errors ?? false"
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary">
+          @for (type of testTypeOptions; track type.value) {
+          <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+
+        <form-error-label [control]="testForm.get('type')!" />
+      </div>
+
+
+      <!-- Image -->
+      <div class="sm:col-span-6">
+        <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">
+          Test Image <span class="text-red-500">*</span>
+        </label>
+
+        <div [class.border-red-500]="testForm.get('imageUrl')?.errors ?? false"
+          class="border-2 border-dashed border-gray-300 rounded-md p-6 text-center relative"
+          [class.bg-purple-50]="isDragOver()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)">
+          <!-- Vista previa -->
+          <div *ngIf="previewImage()" class="mb-4 relative">
+            <img [src]="previewImage()" alt="Preview" class="max-h-40 mx-auto rounded-md" />
+            <!-- Botón eliminar en la esquina superior derecha -->
+            <button type="button" (click)="clearImage()" aria-label="Remove image" title="Remove image"
+              class="absolute top-1 right-1 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-0 text-gray-700 rounded-full w-5 h-5 flex items-center justify-center transition-colors duration-150">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                aria-hidden="true" focusable="false">
+                <path
+                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+
+
+          </div>
+
+          <!-- Sin imagen -->
+          <div *ngIf="!previewImage()" class="space-y-2">
+            <button type="button"
+              class="mt-4 mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 text-primary relative"
+              (click)="fileInput.click()" aria-label="Choose file" title="Choose file">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"
+                class="w-6 h-6">
+                <path
+                  d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z" />
+                <path
+                  d="M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0z" />
+              </svg>
+            </button>
+
+            <p class="text-sm text-gray-500">
+              Drag an image or <span class="text-primary font-medium">browse</span>
+            </p>
+            <p class="text-xs text-gray-400">JPG, JPEG, PNG or GIF(max. 2MB)</p>
+          </div>
+
+          <!-- Input oculto -->
+          <input #fileInput type="file" accept="image/*" class="hidden" (change)="onFilesChanged($event)" />
+        </div>
+        <form-error-label [control]="testForm.get('type')!" />
+      </div>
+
+    </div>
+    <!-- Footer buttons -->
+    <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+      <button type="button" (click)="closeModal()"
+        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Cancelar
+      </button>
+      <button type="submit"
+        class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+        <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m15.3 5.3l-6.8 6.8l-2.8-2.8l-1.4 1.4l4.2 4.2l8.2-8.2z" />
+        </svg>
+        Guardar
+      </button>
+    </div>
+  </form>
+</p-dialog>

@@ -30,7 +30,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { NotificationService } from '@shared/services/notification-service.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
-import { AdminTestModalComponent } from "../../components/admin-test-modal/admin-test-modal.component";
+import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
+import { Question } from '../../../test/interfaces/question.interface';
+import { QuestionsService } from '@test/services/questions.service';
 
 @Component({
   selector: 'app-admin-tests-table',
@@ -42,7 +44,6 @@ import { AdminTestModalComponent } from "../../components/admin-test-modal/admin
     CommonModule,
     FormsModule,
     CommonModule,
-    TestImagePipe,
     ToolbarModule,
     ButtonModule,
     TableModule,
@@ -64,33 +65,41 @@ import { AdminTestModalComponent } from "../../components/admin-test-modal/admin
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    AdminTestModalComponent
-],
-  templateUrl: './test-admin-page.component.html',
+    AdminTestModalComponent,
+  ],
+  templateUrl: './question-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
-export class TestAdminPageComponent {
+export class QuestionAdminPageComponent {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
   @ViewChild(AdminTestModalComponent)
   modal!: AdminTestModalComponent;
 
+  columns = [
+    { key: 'questionNumber', label: 'Nº' },
+    { key: 'text', label: 'Question' },
+    { key: 'type', label: 'Type' },
+    { key: 'test', label: 'Test' },
+    { key: 'category', label: 'Category' },
+    { key: 'score', label: 'Score' },
+  ];
   loading = signal(false);
-  tests: Test[] = [];
+  questions: Question[] = [];
   totalRecords = 0;
   isFiltering = signal(false);
 
   pageSize = signal(10);
   pageNumber = signal(1);
-  sortField = signal('name');
+  sortField = signal('questionNumber');
   sortDescending = signal(false);
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
 
   TestType = TestType;
-  testsService = inject(TestsService);
+  questionService = inject(QuestionsService);
 
-  testsResource = rxResource({
+  questionsResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
       sortBy: this.sortField(),
@@ -101,7 +110,7 @@ export class TestAdminPageComponent {
     })),
     loader: ({ request }) => {
       this.loading.set(true);
-      return this.testsService.getPage(request).pipe(
+      return this.questionService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
