@@ -5,7 +5,7 @@ import {
   TestsResponse,
   TestType,
 } from '../interfaces/test.interface';
-import { Options } from '../interfaces/option.interface';
+import { QueryOptions } from '../interfaces/query-option.interface';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { inject, Injectable } from '@angular/core';
@@ -51,7 +51,7 @@ export class TestsService
       .pipe(tap((resp) => console.log(resp)));
   }
 
-  getPage(option: Options): Observable<TestPagesResponse> {
+  getPage(option: QueryOptions): Observable<TestPagesResponse> {
     const {
       filters = {},
       sortBy = '',

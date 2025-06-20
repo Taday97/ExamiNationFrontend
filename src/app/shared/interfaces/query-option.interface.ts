@@ -1,4 +1,4 @@
-export interface Options{
+export interface QueryOptions{
   filters: { [key: string]: string };
   sortBy?: string;
   sortDescending: boolean,

@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Options } from '@test/interfaces/option.interface';
 import { PagesResponse } from '@test/interfaces/pages-response.interface';
 import {
   Questions,
   QuestionsResponse,
-} from '@test/interfaces/question.interface';
+} from '@shared/interfaces/question.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Question, Filters } from '../interfaces/question.interface';
 import { IDeleteService } from './interfaces/delete-service.interface';
+import { QueryOptions } from '@shared/interfaces/query-option.interface';
 
 const baseUrl = environment.baseUrl;
 
@@ -22,7 +22,7 @@ export class QuestionsService implements IDeleteService<QuestionsResponse> {
   delete(id: string): Observable<QuestionsResponse> {
     return this.http.delete<QuestionsResponse>(`${baseUrl}/Question/${id}`);
   }
-  getQuetionsPage(option: Options): Observable<QuestionsResponse> {
+  getQuetionsPage(option: QueryOptions): Observable<QuestionsResponse> {
     const {
       filters = {},
       sortBy = '',
@@ -49,7 +49,7 @@ export class QuestionsService implements IDeleteService<QuestionsResponse> {
       })
       .pipe(tap((resp) => console.log('page' + resp.data.questions.filters)));
   }
-  getPage(option: Options): Observable<PagesResponse<Questions>> {
+  getPage(option: QueryOptions): Observable<PagesResponse<Questions>> {
     const {
       filters = {},
       sortBy = '',

@@ -1,4 +1,4 @@
-import { Test } from '@test/interfaces/test.interface';
+import { Test } from '@shared/interfaces/test.interface';
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import {
@@ -9,10 +9,10 @@ import {
 } from '@angular/forms';
 import { FormUtils } from 'src/app/utils/form-utils';
 import { FormErrorLabelComponent } from '@shared/components/form-error-label/form-error-label.component';
-import { TestType } from '@test/interfaces/test.interface';
+import { TestType } from '@shared/interfaces/test.interface';
 import { firstValueFrom } from 'rxjs';
-import { TestsService } from '@test/services/tests.service';
-import { NotificationService } from '@shared/services/notification-service.service';
+import { TestsService } from '@shared/services/tests.service';
+import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { handle } from 'src/app/utils/handle.helper';
 import { MessageService, ConfirmationService } from 'primeng/api';

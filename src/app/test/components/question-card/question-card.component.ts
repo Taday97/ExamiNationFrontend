@@ -7,7 +7,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { Question } from '@test/interfaces/question.interface';
+import { Question } from '@shared/interfaces/question.interface';
 import { SubmitAnswerRequest } from '../../interfaces/submitAnswer.interface';
 import { NgClass } from '@angular/common';
 

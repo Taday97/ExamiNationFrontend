@@ -1,0 +1,280 @@
+<main class="p-6 bg-gray-50 min-h-screen mb-6">
+
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
+      <p class="text-sm text-gray-500">Resumen general del sistema</p>
+    </div>
+    <div class="flex space-x-3">
+      <button
+        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-button flex items-center whitespace-nowrap">
+        <div class="w-5 h-5 flex items-center justify-center mr-2">
+          <i class="ri-download-line"></i>
+        </div>
+        Exportar Datos
+      </button>
+      <button
+        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-button flex items-center whitespace-nowrap">
+        <div class="w-5 h-5 flex items-center justify-center mr-2">
+          <i class="ri-calendar-line"></i>
+        </div>
+        Últimos 30 días
+      </button>
+    </div>
+  </div>
+  <div class="grid grid-cols-4 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-primary">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-user-line"></i>
+          </div>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Total Usuarios</p>
+          <div class="flex items-baseline">
+            <p class="text-2xl font-semibold">2,847</p>
+            <p class="text-xs text-green-500 ml-2">+12.5%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-file-list-3-line"></i>
+          </div>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Tests Activos</p>
+          <div class="flex items-baseline">
+            <p class="text-2xl font-semibold">156</p>
+            <p class="text-xs text-green-500 ml-2">+3.2%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-check-double-line"></i>
+          </div>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Tests Completados</p>
+          <div class="flex items-baseline">
+            <p class="text-2xl font-semibold">12,583</p>
+            <p class="text-xs text-green-500 ml-2">+8.1%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
+          <div class="w-6 h-6 flex items-center justify-center">
+            <i class="ri-time-line"></i>
+          </div>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500">Tiempo Promedio</p>
+          <div class="flex items-baseline">
+            <p class="text-2xl font-semibold">24m</p>
+            <p class="text-xs text-red-500 ml-2">-1.8%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="font-medium">Actividad de Tests</h3>
+        <div class="flex space-x-2">
+          <button class="text-sm text-gray-500 hover:text-primary">Diario</button>
+          <button class="text-sm text-primary">Semanal</button>
+          <button class="text-sm text-gray-500 hover:text-primary">Mensual</button>
+        </div>
+      </div>
+      <div class="h-64" id="activity-chart" style="user-select: none; position: relative;"
+        _echarts_instance_="ec_1750351427124">
+        <div
+          style="position: relative; width: 628px; height: 256px; padding: 0px; margin: 0px; border-width: 0px; cursor: pointer;">
+          <canvas
+            style="position: absolute; left: 0px; top: 0px; width: 628px; height: 256px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;"
+            data-zr-dom-id="zr_0" width="942" height="384"></canvas>
+        </div>
+        <div class=""
+          style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px; transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); background-color: rgba(255, 255, 255, 0.9); border-width: 1px; border-radius: 4px; color: rgb(31, 41, 55); font: 14px / 21px Microsoft YaHei; padding: 10px; top: 0px; left: 0px; transform: translate3d(656px, 122px, 0px); border-color: rgb(226, 232, 240); pointer-events: none; visibility: hidden; opacity: 0;">
+          <div style="margin: 0px 0 0;line-height:1;">
+            <div style="margin: 0px 0 0;line-height:1;">
+              <div style="font-size:14px;color:#1F2937;font-weight:400;line-height:1;">Sáb</div>
+              <div style="margin: 10px 0 0;line-height:1;">
+                <div style="margin: 0px 0 0;line-height:1;">
+                  <div style="margin: 0px 0 0;line-height:1;"><span
+                      style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#5470c6;"></span><span
+                      style="font-size:14px;color:#1F2937;font-weight:400;margin-left:2px">Tests
+                      Completados</span><span
+                      style="float:right;margin-left:20px;font-size:14px;color:#1F2937;font-weight:900">230</span>
+                    <div style="clear:both"></div>
+                  </div>
+                  <div style="clear:both"></div>
+                </div>
+                <div style="clear:both"></div>
+              </div>
+              <div style="clear:both"></div>
+            </div>
+            <div style="clear:both"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="font-medium">Distribución por Categoría</h3>
+        <button class="text-sm text-gray-500 hover:text-primary">
+          <i class="ri-more-2-fill"></i>
+        </button>
+      </div>
+      <div class="h-64" id="category-chart" style="user-select: none; position: relative;"
+        _echarts_instance_="ec_1750351427125">
+        <div
+          style="position: relative; width: 628px; height: 256px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+          <canvas
+            style="position: absolute; left: 0px; top: 0px; width: 628px; height: 256px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;"
+            data-zr-dom-id="zr_0" width="942" height="384"></canvas>
+        </div>
+        <div class=""
+          style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px; background-color: rgba(255, 255, 255, 0.9); border-width: 1px; border-radius: 4px; color: rgb(31, 41, 55); font: 14px / 21px Microsoft YaHei; padding: 10px; top: 0px; left: 0px; transform: translate3d(255px, 101px, 0px); border-color: rgb(226, 232, 240); pointer-events: none; visibility: hidden; opacity: 0;">
+          <div style="margin: 0px 0 0;line-height:1;">
+            <div style="font-size:14px;color:#1F2937;font-weight:400;line-height:1;">Categorías</div>
+            <div style="margin: 10px 0 0;line-height:1;">
+              <div style="margin: 0px 0 0;line-height:1;"><span
+                  style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:rgba(251, 191, 114, 1);"></span><span
+                  style="font-size:14px;color:#1F2937;font-weight:400;margin-left:2px">Profesional</span><span
+                  style="float:right;margin-left:20px;font-size:14px;color:#1F2937;font-weight:900">18</span>
+                <div style="clear:both"></div>
+              </div>
+              <div style="clear:both"></div>
+            </div>
+            <div style="clear:both"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-3 gap-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 col-span-2">
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="font-medium">Tests Recientes</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Test</th>
+              <th>Puntuación</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="flex items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-primary font-semibold text-sm">
+                    JD
+                  </div>
+                  <span class="ml-2">Juan Díaz</span>
+                </div>
+              </td>
+              <td>Test de Aptitud Cognitiva</td>
+              <td>92/100</td>
+              <td>07/06/2025</td>
+              <td><span class="status-badge status-completed">Completado</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="flex items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-primary font-semibold text-sm">
+                    AM
+                  </div>
+                  <span class="ml-2">Ana Martínez</span>
+                </div>
+              </td>
+              <td>Test de Inteligencia Emocional</td>
+              <td>45/50</td>
+              <td>07/06/2025</td>
+              <td><span class="status-badge status-completed">Completado</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="flex items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-primary font-semibold text-sm">
+                    RG
+                  </div>
+                  <span class="ml-2">Roberto García</span>
+                </div>
+              </td>
+              <td>Test de Orientación Profesional</td>
+              <td>-</td>
+              <td>07/06/2025</td>
+              <td><span class="status-badge status-in-progress">En Progreso</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100">
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="font-medium">Categorías Populares</h3>
+      </div>
+      <div class="p-6">
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium">Inteligencia Emocional</span>
+              <span class="text-sm text-gray-500">42%</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full">
+              <div class="h-2 bg-primary rounded-full" style="width: 42%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium">Aptitud Cognitiva</span>
+              <span class="text-sm text-gray-500">28%</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full">
+              <div class="h-2 bg-primary rounded-full" style="width: 28%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium">Orientación Profesional</span>
+              <span class="text-sm text-gray-500">18%</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full">
+              <div class="h-2 bg-primary rounded-full" style="width: 18%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm font-medium">Personalidad</span>
+              <span class="text-sm text-gray-500">12%</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full">
+              <div class="h-2 bg-primary rounded-full" style="width: 12%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

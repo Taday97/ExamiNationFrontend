@@ -1,21 +1,29 @@
-<header class="bg-white border-b border-gray-200 fixed top-0 right-0 left-64 z-10 transition-all duration-300">
+<header
+  [class.left-64]="sidebarOpen()"
+  [class.left-0]="!sidebarOpen()"
+   class="bg-white border-b border-gray-200 fixed top-0 right-0 z-10 transition-all duration-300">
   <div class="flex items-center justify-between px-6 h-16">
+
     <div class="flex items-center">
-      <div class="relative">
-        <input type="text" placeholder="Buscar..."
-          class="pl-9 pr-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50">
-        <div
-          class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center text-gray-400">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-              <path
-                d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
-              <path fill="currentColor"
-                d="M10.5 2a8.5 8.5 0 1 0 5.262 15.176l3.652 3.652a1 1 0 0 0 1.414-1.414l-3.652-3.652A8.5 8.5 0 0 0 10.5 2M4 10.5a6.5 6.5 0 1 1 13 0a6.5 6.5 0 0 1-13 0" />
+      <button id="toggle-sidebar" class="text-gray-500 hover:text-primary transition-colors" (click)="onToggle()">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+            <g fill="none" stroke="currentColor" stroke-dasharray="16" stroke-dashoffset="16" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="2">
+              <path d="M5 5h14">
+                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="16;0" />
+              </path>
+              <path d="M5 12h14">
+                <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.2s" values="16;0" />
+              </path>
+              <path d="M5 19h14">
+                <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.4s" dur="0.2s" values="16;0" />
+              </path>
             </g>
           </svg>
         </div>
-      </div>
+      </button>
+
     </div>
 
     <div class="flex items-center space-x-4">

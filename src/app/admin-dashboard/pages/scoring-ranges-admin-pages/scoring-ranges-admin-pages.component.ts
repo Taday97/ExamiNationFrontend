@@ -1,13 +1,13 @@
-import { Component, computed, inject, signal, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
+import { computed, inject, signal, ViewChild } from '@angular/core';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { catchError, firstValueFrom, map, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { MessageService } from 'primeng/api';
 import { Test, TestType } from '@shared/interfaces/test.interface';
 
 import { ToolbarModule } from 'primeng/toolbar';
@@ -26,15 +26,15 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
-import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
-import { Question, QuestionType } from '@shared/interfaces/question.interface';
-import { QuestionsService } from '@shared/services/questions.service';
-import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
+import { MessageService } from 'primeng/api';
+import { NotificationService } from '@shared/services/notification.service';
+import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
+import { ScoreRangesService } from '@admin-dashboard/services/score-ranges.service';
 
 @Component({
-  selector: 'app-admin-tests-table',
+  selector: 'app-scoring-ranges-admin-pages',
   imports: [
     TableModule,
     ButtonModule,
@@ -65,41 +65,54 @@ import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
     ToastModule,
     DeleteConfirmDialogComponent,
     AdminTestModalComponent,
-    CamelCaseToSpacesPipe
-],
-  templateUrl: './question-admin-page.component.html',
+  ],
+  templateUrl: './scoring-ranges-admin-pages.component.html',
   providers: [MessageService, NotificationService],
 })
-export class QuestionAdminPageComponent {
-
+export class ScoringRangesAdminPagesComponent {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
   @ViewChild(AdminTestModalComponent)
   modal!: AdminTestModalComponent;
 
-  columns = [
-    { key: 'questionNumber', label: 'Nº' },
-    { key: 'text', label: 'Question' },
-    { key: 'type', label: 'Type' },
-    { key: 'testName', label: 'Test' },
-    { key: 'cognitiveCategoryName', label: 'Category' },
-    { key: 'score', label: 'Score' },
-  ];
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
 
+  columns = [
+    { key: 'testName', label: 'Test Name' },
+    { key: 'minScore', label: 'minScore' },
+    { key: 'maxScore', label: 'maxScore' },
+    { key: 'classification', label: 'Classification' },
+    { key: 'shortDescription', label: 'Short Description' },
+    { key: 'detailedExplanation', label: 'Detailed Explanation' },
+    { key: 'recommendations', label: 'Recommendations' },
+  ];
   pageSize = signal(10);
   pageNumber = signal(1);
-  sortField = signal('questionNumber');
+  sortField = signal('name');
   sortDescending = signal(false);
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
+  baseColors = [
+    '#4DA3FF',
+    '#B266FF',
+    '#7B61FF',
+    '#FF7F2A',
+    '#56CC9D',
+    '#FF6B81',
+    '#FFD93D',
+    '#00C1D4',
+    '#FFA69E',
+    '#845EC2',
+  ];
+  getRandomColor(index: number): string {
+    return this.baseColors[index % this.baseColors.length];
+  }
 
-  QuestionType = QuestionType;
-  questionService = inject(QuestionsService);
+  scoreRangesService = inject(ScoreRangesService);
 
-  questionsResource = rxResource({
+  categoriesResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
       sortBy: this.sortField(),
@@ -110,7 +123,7 @@ export class QuestionAdminPageComponent {
     })),
     loader: ({ request }) => {
       this.loading.set(true);
-      return this.questionService.getPage(request).pipe(
+      return this.scoreRangesService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
@@ -118,8 +131,8 @@ export class QuestionAdminPageComponent {
           return res.data.items;
         }),
         catchError((err) => {
-          console.log(err);
           this.loading.set(false);
+          console.error(err);
           return of([]);
         })
       );

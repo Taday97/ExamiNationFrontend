@@ -1,13 +1,7 @@
-import { TestType, Test } from './test.interface';
+import { TestType, Test } from '../../shared/interfaces/test.interface';
 import { catchError } from 'rxjs';
 
 
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  errors: any[];
-  data: T;
-}
 export interface TestResultSummary {
   testResultDto: TestResultDto;
   countQuestions: number;

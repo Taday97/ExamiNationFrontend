@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Test, TestType } from '@test/interfaces/test.interface';
+import { Test, TestType } from '@shared/interfaces/test.interface';
 
 @Component({
   selector: 'test-introduction',

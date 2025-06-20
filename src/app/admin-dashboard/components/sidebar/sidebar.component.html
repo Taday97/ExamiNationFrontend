@@ -1,0 +1,101 @@
+
+<aside id="sidebar"
+  [class.w-64]="sidebarOpen()"
+  [class.w-0]="!sidebarOpen()"
+  class="bg-white border-r border-gray-200 fixed h-full flex-col z-10 transition-all duration-300 overflow-hidden md:flex">
+
+  <div class="p-2 border-b border-gray-200 flex items-center justify-between">
+    <div class="flex items-center space-x-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" class="lucide lucide-brain h-8 w-8 text-primary">
+        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path>
+        <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"></path>
+        <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path>
+        <path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path>
+        <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path>
+        <path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path>
+        <path d="M19.938 10.5a4 4 0 0 1 .585.396"></path>
+        <path d="M6 18a4 4 0 0 1-1.967-.516"></path>
+        <path d="M19.967 17.484A4 4 0 0 1 18 18"></path>
+      </svg>
+      <div>
+        <a routerLink="/" class="flex-shrink-0 flex items-center">
+          <span class="text-2xl font-pacifico text-primary">ExamiNation</span>
+        </a>
+        <p class="text-xs text-muted-foreground">Admin Dashboard</p>
+      </div>
+    </div>
+
+  </div>
+  <nav class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+
+    <div class="space-y-1">
+      @for (item of menuItems; track item) {
+      <div>
+        @if (!item.children) {
+        <a [routerLink]="[item.route]" routerLinkActive="bg-indigo-50 text-primary"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center px-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-indigo-50 hover:text-primary">
+          <div class="w-6 h-6 mr-3 flex items-center justify-center" [innerHTML]="item.iconSvg"></div>
+          {{ item.label }}
+        </a>
+        } @else {
+        <div class="space-y-1">
+          <button
+            class="w-full flex items-center justify-between px-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-indigo-50 hover:text-primary"
+            (click)="item.expanded = !item.expanded">
+            <span class="flex items-center">
+              <div class="w-6 h-6 mr-3 flex items-center justify-center" [innerHTML]="item.iconSvg"></div>
+              {{ item.label }}
+            </span>
+            <svg [class.rotate-180]="item.expanded" class="h-4 w-4 transform transition-transform" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- SUBMENÚ -->
+          <div *ngIf="item.expanded" class="ml-6 space-y-1">
+            @for (child of item.children; track child) {
+            <a [routerLink]="[child.route]" routerLinkActive="text-primary bg-indigo-50"
+              class="flex items-center px-2 py-2 text-sm font-medium text-gray-500 rounded-md hover:bg-indigo-50 hover:text-primary">
+              <div class="w-4 h-4 mr-3 flex items-center justify-center" [innerHTML]="child.iconSvg"></div>
+              {{ child.label }}
+            </a>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+  </nav>
+  <div class="p-5 border-t border-gray-200">
+    <div class="flex items-center">
+      <div class="flex-shrink-0">
+        <img class="h-10 w-10 rounded-full"
+          src="https://readdy.ai/api/search-image?query=professional%252520headshot%252520of%252520a%252520young%252520business%252520person%252520with%252520neutral%252520expression%25252C%252520high%252520quality%25252C%252520studio%252520lighting%25252C%252520professional&amp;width=100&amp;height=100&amp;seq=admin-avatar&amp;orientation=squarish"
+          alt="Admin avatar">
+      </div>
+      <div class="ml-3">
+        <p class="text-sm font-medium text-gray-900">David Mitchell</p>
+        <p class="text-xs font-medium text-gray-500">Administrator</p>
+      </div>
+      <button class="ml-auto flex-shrink-0 p-1 text-gray-400 rounded-full hover:text-gray-500"
+        (click)="authService.logout()" routerLink="/auth/login">
+        <div class="w-5 h-5 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+            <path fill="currentColor"
+              d="M77.155 272.034H351.75v-32.001H77.155l75.053-75.053v-.001l-22.628-22.626l-113.681 113.68l.001.001h-.001L129.58 369.715l22.628-22.627v-.001z"
+              stroke-width="15" stroke="currentColor" />
+            <path fill="currentColor" d="M160 16v32h304v416H160v32h336V16z" stroke-width="15" stroke="currentColor" />
+          </svg>
+        </div>
+
+      </button>
+    </div>
+  </div>
+</aside>
+
+

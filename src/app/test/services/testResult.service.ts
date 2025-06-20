@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { ApiResponse } from '@test/interfaces/api-response.interface';
 import {
   SubmitAnswerRequest,
   TestResultResponse,
 } from '@test/interfaces/submitAnswer.interface';
 import {
-  ApiResponse,
   TestResultHistory,
   TestResultSummary,
 } from '@test/interfaces/test-result.interface';

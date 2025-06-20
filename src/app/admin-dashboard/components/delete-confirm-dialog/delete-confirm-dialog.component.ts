@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, input, Output, signal } from '@angular/core';
-import { NotificationService } from '@shared/services/notification-service.service';
-import { IDeleteService } from '@test/services/interfaces/delete-service.interface';
+import { NotificationService } from '@shared/services/notification.service';
+import { IDeleteService } from '@shared/services/interfaces/delete-service.interface';
 import { firstValueFrom } from 'rxjs';
 import { handle } from 'src/app/utils/handle.helper';
 

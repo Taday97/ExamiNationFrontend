@@ -5,11 +5,11 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { catchError, firstValueFrom, map, of } from 'rxjs';
-import { TestsService } from '@test/services/tests.service';
+import { catchError, map, of } from 'rxjs';
+import { TestsService } from '@shared/services/tests.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
-import { Test, TestType } from '@test/interfaces/test.interface';
+import { Test, TestType } from '@shared/interfaces/test.interface';
 import { TestImagePipe } from '@test/pipes/test-image.pipe';
 
 import { ToolbarModule } from 'primeng/toolbar';
@@ -28,9 +28,9 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
-import { NotificationService } from '@shared/services/notification-service.service';
+import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
-import { AdminTestModalComponent } from "../../components/admin-test-modal/admin-test-modal.component";
+import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
 
 @Component({
   selector: 'app-admin-tests-table',
@@ -64,8 +64,8 @@ import { AdminTestModalComponent } from "../../components/admin-test-modal/admin
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    AdminTestModalComponent
-],
+    AdminTestModalComponent,
+  ],
   templateUrl: './test-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
@@ -80,6 +80,12 @@ export class TestAdminPageComponent {
   totalRecords = 0;
   isFiltering = signal(false);
 
+  columns = [
+    { key: 'name', label: 'Test Name' },
+    { key: 'description', label: 'Description' },
+    { key: 'category', label: 'Type' },
+    { key: 'createdAt', label: 'Created Date' }
+  ];
   pageSize = signal(10);
   pageNumber = signal(1);
   sortField = signal('name');

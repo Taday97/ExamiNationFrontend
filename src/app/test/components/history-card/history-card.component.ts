@@ -5,7 +5,7 @@ import {
   TestResultHistory,
   TestResultStatus,
 } from '@test/interfaces/test-result.interface';
-import { TestType } from '@test/interfaces/test.interface';
+import { TestType } from '@shared/interfaces/test.interface';
 import { PerformanceCardCategoryComponent } from '../../../test-front/components/performance-card-category/performance-card-category.component';
 
 @Component({

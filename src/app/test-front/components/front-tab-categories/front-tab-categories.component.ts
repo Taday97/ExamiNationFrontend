@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { TestType } from '@test/interfaces/test.interface';
+import { TestType } from '@shared/interfaces/test.interface';
 
 @Component({
   selector: 'front-tab-categories',

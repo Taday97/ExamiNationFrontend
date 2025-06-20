@@ -1,14 +1,16 @@
-import { Component, computed, inject, signal, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
+import { computed, inject, signal, ViewChild } from '@angular/core';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { catchError, firstValueFrom, map, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
+import { TestsService } from '@shared/services/tests.service';
 import { CommonModule } from '@angular/common';
-import { MessageService } from 'primeng/api';
 import { Test, TestType } from '@shared/interfaces/test.interface';
+import { TestImagePipe } from '@test/pipes/test-image.pipe';
 
 import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -26,15 +28,15 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
-import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
-import { Question, QuestionType } from '@shared/interfaces/question.interface';
-import { QuestionsService } from '@shared/services/questions.service';
-import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
+import { OptionsService } from '@admin-dashboard/services/options.service';
+import { MessageService } from 'primeng/api';
+import { NotificationService } from '@shared/services/notification.service';
+import { Question } from '@shared/interfaces/question.interface';
 
 @Component({
-  selector: 'app-admin-tests-table',
+  selector: 'app-option-admin-page',
   imports: [
     TableModule,
     ButtonModule,
@@ -65,41 +67,35 @@ import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
     ToastModule,
     DeleteConfirmDialogComponent,
     AdminTestModalComponent,
-    CamelCaseToSpacesPipe
-],
-  templateUrl: './question-admin-page.component.html',
+  ],
+  templateUrl: './option-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
-export class QuestionAdminPageComponent {
-
+export class OptionAdminPageComponent {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
   @ViewChild(AdminTestModalComponent)
   modal!: AdminTestModalComponent;
 
-  columns = [
-    { key: 'questionNumber', label: 'Nº' },
-    { key: 'text', label: 'Question' },
-    { key: 'type', label: 'Type' },
-    { key: 'testName', label: 'Test' },
-    { key: 'cognitiveCategoryName', label: 'Category' },
-    { key: 'score', label: 'Score' },
-  ];
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
 
+  columns = [
+    { key: 'text', label: 'Text' },
+    { key: 'questionText', label: 'Question' },
+    { key: 'isCorrect', label: 'Correct' },
+  ];
   pageSize = signal(10);
   pageNumber = signal(1);
-  sortField = signal('questionNumber');
+  sortField = signal('text');
   sortDescending = signal(false);
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
 
-  QuestionType = QuestionType;
-  questionService = inject(QuestionsService);
+  optionsService = inject(OptionsService);
 
-  questionsResource = rxResource({
+  optionsResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
       sortBy: this.sortField(),
@@ -110,7 +106,7 @@ export class QuestionAdminPageComponent {
     })),
     loader: ({ request }) => {
       this.loading.set(true);
-      return this.questionService.getPage(request).pipe(
+      return this.optionsService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
@@ -118,8 +114,8 @@ export class QuestionAdminPageComponent {
           return res.data.items;
         }),
         catchError((err) => {
-          console.log(err);
           this.loading.set(false);
+          console.error(err);
           return of([]);
         })
       );

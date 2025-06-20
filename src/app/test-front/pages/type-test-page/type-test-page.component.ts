@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { TestsService } from '@test/services/tests.service';
+import { TestsService } from '@shared/services/tests.service';
 import { map } from 'rxjs';
 import { TestCardComponent } from "../../../test/components/test-card/test-card.component";
 
