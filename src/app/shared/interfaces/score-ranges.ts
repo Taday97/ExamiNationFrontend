@@ -1,4 +1,4 @@
-import { Filters } from "./test.interface";
+import { Filters, TestType } from "./test.interface";
 
 
 export interface ScoreRangesResponse {
@@ -17,6 +17,7 @@ export interface ScoreRange {
   id:                  string;
   testId:              string;
   testName:            null;
+  testType:            TestType;
   minScore:            number;
   maxScore:            number;
   classification:      string;

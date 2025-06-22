@@ -30,8 +30,9 @@ import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete
 import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
-import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { ScoreRangesService } from '@admin-dashboard/services/score-ranges.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 
 @Component({
   selector: 'app-scoring-ranges-admin-pages',
@@ -81,12 +82,9 @@ export class ScoringRangesAdminPagesComponent {
 
   columns = [
     { key: 'testName', label: 'Test Name' },
-    { key: 'minScore', label: 'minScore' },
-    { key: 'maxScore', label: 'maxScore' },
+    { key: 'minScore', label: 'Score Range' },
     { key: 'classification', label: 'Classification' },
     { key: 'shortDescription', label: 'Short Description' },
-    { key: 'detailedExplanation', label: 'Detailed Explanation' },
-    { key: 'recommendations', label: 'Recommendations' },
   ];
   pageSize = signal(10);
   pageNumber = signal(1);
@@ -94,22 +92,8 @@ export class ScoringRangesAdminPagesComponent {
   sortDescending = signal(false);
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
-  baseColors = [
-    '#4DA3FF',
-    '#B266FF',
-    '#7B61FF',
-    '#FF7F2A',
-    '#56CC9D',
-    '#FF6B81',
-    '#FFD93D',
-    '#00C1D4',
-    '#FFA69E',
-    '#845EC2',
-  ];
-  getRandomColor(index: number): string {
-    return this.baseColors[index % this.baseColors.length];
-  }
 
+  testUiService = inject(TestUiService);
   scoreRangesService = inject(ScoreRangesService);
 
   categoriesResource = rxResource({
@@ -128,7 +112,13 @@ export class ScoringRangesAdminPagesComponent {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
-          return res.data.items;
+          const enrichedItems = res.data.items.map((item,index) => ({
+            ...item,
+            testTypeData: this.testUiService.getTestTypeData(item.testType),
+            randomColor: this.testUiService.getRandomColor(index)
+          }));
+
+          return enrichedItems;
         }),
         catchError((err) => {
           this.loading.set(false);

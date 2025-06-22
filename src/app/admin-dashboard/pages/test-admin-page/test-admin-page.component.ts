@@ -31,6 +31,7 @@ import { CardModule } from 'primeng/card';
 import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
+import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 
 @Component({
   selector: 'app-admin-tests-table',
@@ -84,7 +85,7 @@ export class TestAdminPageComponent {
     { key: 'name', label: 'Test Name' },
     { key: 'description', label: 'Description' },
     { key: 'category', label: 'Type' },
-    { key: 'createdAt', label: 'Created Date' }
+    { key: 'createdAt', label: 'Created Date' },
   ];
   pageSize = signal(10);
   pageNumber = signal(1);
@@ -94,6 +95,8 @@ export class TestAdminPageComponent {
   refreshTrigger = signal(false);
 
   TestType = TestType;
+
+  testUiService = inject(TestUiService);
   testsService = inject(TestsService);
 
   testsResource = rxResource({
@@ -112,7 +115,15 @@ export class TestAdminPageComponent {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
-          return res.data.items;
+          const items = res.data.items.map((item,index) => {
+            return {
+              ...item,
+              typeName:TestType[item.type],
+              testTypeData: this.testUiService.getTestTypeData(item.type),
+              randomColor: this.testUiService.getRandomColor(index),
+            };
+          });
+          return items;
         }),
         catchError((err) => {
           this.loading.set(false);

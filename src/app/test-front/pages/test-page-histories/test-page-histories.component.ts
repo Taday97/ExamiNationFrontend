@@ -3,7 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth/services/auth.service';
 import { HistoryCardComponent } from '@test/components/history-card/history-card.component';
-import { TestResultService } from '@test/services/testResult.service';
+import { TestResultService } from '@shared/services/testResult.service';
 import { map } from 'rxjs';
 import testFrontRoutes from '../../test.front.routes';
 
@@ -17,7 +17,7 @@ export class TestPageHistoriesComponent {
   authService = inject(AuthService);
   userId = computed(() => this.authService.user()?.id);
 
-  
+
   testsResultHistoryResource = rxResource({
     request: () => ({ userId: this.userId()! }),
     loader: ({ request }) =>

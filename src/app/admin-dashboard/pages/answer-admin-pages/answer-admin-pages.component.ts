@@ -30,11 +30,12 @@ import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete
 import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
-import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
-
+import { TestResultService } from '@shared/services/testResult.service';
+import { TestResultStatus } from '@test/interfaces/test-result.interface';
+import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
 @Component({
-  selector: 'app-cognitive-category-admin-page',
+  selector: 'app-answer-admin-pages',
   imports: [
     TableModule,
     ButtonModule,
@@ -65,11 +66,12 @@ import { TestUiService } from '@admin-dashboard/services/test-ui.service';
     ToastModule,
     DeleteConfirmDialogComponent,
     AdminTestModalComponent,
+    CamelCaseToSpacesPipe,
   ],
-  templateUrl: './cognitive-category-admin-page.component.html',
+  templateUrl: './answer-admin-pages.component.html',
   providers: [MessageService, NotificationService],
 })
-export class CognitiveCategoryAdminPageComponent {
+export class AnswerAdminPagesComponent {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
   @ViewChild(AdminTestModalComponent)
@@ -80,22 +82,23 @@ export class CognitiveCategoryAdminPageComponent {
   isFiltering = signal(false);
 
   columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'code', label: 'Code' },
-    { key: 'description', label: 'Description' },
-    { key: 'testTypeId', label: 'Test Type' },
+    { key: 'userEmail', label: 'user' },
+    { key: 'testName', label: 'Test' },
+    { key: 'startedAt', label: 'Start' },
+    { key: 'completedAt', label: 'End' },
+    { key: 'score', label: 'Score' },
+    // { key: 'shortDescription', label: 'Progress' },
+    { key: 'status', label: 'State' },
   ];
   pageSize = signal(10);
   pageNumber = signal(1);
-  sortField = signal('name');
+  sortField = signal('userName');
   sortDescending = signal(false);
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
 
-  TestType = TestType;
-
   testUiService = inject(TestUiService);
-  cognitiveCategoryService = inject(CognitiveCategoryService);
+  testResultService = inject(TestResultService);
 
   categoriesResource = rxResource({
     request: computed(() => ({
@@ -108,17 +111,21 @@ export class CognitiveCategoryAdminPageComponent {
     })),
     loader: ({ request }) => {
       this.loading.set(true);
-      return this.cognitiveCategoryService.getPage(request).pipe(
+      return this.testResultService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
-          const items = res.data.items.map((item) => ({
+          const enrichedItems = res.data.items.map((item, index) => ({
             ...item,
-            testTypeData: this.testUiService.getTestTypeData(item.testTypeId),
-            testTypeName: TestType[item.testTypeId],
+            status: TestResultStatus[item.status],
+            testTypeData: this.testUiService.getTestTypeData(item.testType),
+            randomColor: this.testUiService.getRandomColor(
+              Math.floor(Math.random() * this.testUiService.baseColors.length)
+            ),
           }));
-          return items;
+
+          return enrichedItems;
         }),
         catchError((err) => {
           this.loading.set(false);

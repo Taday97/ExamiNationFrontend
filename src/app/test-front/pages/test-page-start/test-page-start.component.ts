@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { Test } from '@shared/interfaces/test.interface';
 import { PaginationService } from '@shared/components/pagination/pagination.service';
-import { TestResultService } from '@test/services/testResult.service';
+import { TestResultService } from '@shared/services/testResult.service';
 import { LoadingService } from '@shared/services/loadingService .service';
 
 @Component({

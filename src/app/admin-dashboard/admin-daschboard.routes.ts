@@ -8,6 +8,7 @@ import { OptionAdminPageComponent } from './pages/option-admin-page/option-admin
 import { CognitiveCategory } from '../shared/interfaces/cognitve-category';
 import { CognitiveCategoryAdminPageComponent } from './pages/cognitive-category-admin-page/cognitive-category-admin-page.component';
 import { ScoringRangesAdminPagesComponent } from './pages/scoring-ranges-admin-pages/scoring-ranges-admin-pages.component';
+import { AnswerAdminPagesComponent } from './pages/answer-admin-pages/answer-admin-pages.component';
 
 export const adminDashboardRoutes: Routes = [
   {
@@ -38,6 +39,10 @@ export const adminDashboardRoutes: Routes = [
       {
         path: 'scoringRanges',
         component: ScoringRangesAdminPagesComponent,
+      },
+      {
+        path: 'answers',
+        component: AnswerAdminPagesComponent,
       },
       {
         path: '**',
