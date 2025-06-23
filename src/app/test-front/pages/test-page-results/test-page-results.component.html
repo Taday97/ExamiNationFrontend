@@ -21,7 +21,7 @@
                 IQ Test Results
               </h1>
               <span class="text-gray-500 text-sm">Completed on {{
-                testsResultResource.value()?.testResultDto?.completedAt| date: 'MMMM d, y' }}</span>
+                testsResultResource.value()?.testResultDto?.completedAt| date: 'MMMM d, y HH:mm' }}</span>
             </div>
 
             <!-- Results Message -->
@@ -98,26 +98,43 @@
             <ul class="space-y-3">
               @for (item of explanationList; track $index) {
               <li class="flex items-start">
-                <div class="w-5 h-5 flex items-center justify-center bg-primary rounded-full mr-3 mt-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16">
-                    <path fill="#fff" fill-rule="evenodd"
-                      d="M13.488 3.43a.75.75 0 0 1 .081 1.058l-6 7a.75.75 0 0 1-1.1.042l-3.5-3.5A.75.75 0 0 1 4.03 6.97l2.928 2.927l5.473-6.385a.75.75 0 0 1 1.057-.081"
-                      clip-rule="evenodd" />
+                <div
+                  class="w-6 h-6 flex items-center justify-center bg-primary/90 text-white rounded-full mr-3 mt-1 shadow-sm">
+                  <svg class="h-3 w-3" viewBox="0 0 16 16" fill="currentColor">
+                    <path
+                      d="M13.488 3.43a.75.75 0 0 1 .081 1.058l-6 7a.75.75 0 0 1-1.1.042l-3.5-3.5A.75.75 0 0 1 4.03 6.97l2.928 2.927l5.473-6.385a.75.75 0 0 1 1.057-.081" />
                   </svg>
                 </div>
-                <span class="text-gray-700">{{item}}</span>
+                <span class="text-gray-700 text-sm">{{ item }}</span>
               </li>
               }
             </ul>
-
-            <div class="mt-6 p-4 bg-blue-50 border-l-4 border-primary rounded">
-              <p class="text-gray-700 text-sm text-justify"><span class="font-semibold">
-                  Remember:
-                </span> The score shown here is based on your performance
-                in the {{testsResultResource.value()?.testName}} questions and does not represent a formal
-                IQ score. IQ tests measure intelligence in a broader context
-                and require standardized scoring.</p>
+            <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded shadow-sm">
+              <div class="flex items-start gap-3">
+                <div class="text-yellow-500 mt-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
+                    stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                  </svg>
+                </div>
+                <div class="text-sm text-gray-800">
+                  <p class="font-medium mb-1">Recommendations:</p>
+                  <p>{{ testsResultResource.value()?.recommendations }}</p>
+                </div>
+              </div>
             </div>
+
+
+            <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-lg">
+              <p class="text-sm text-gray-700 leading-relaxed">
+                <span class="font-semibold text-blue-700">Remember:</span>
+                The score shown here is based on your performance in the
+                <span class="font-medium text-gray-800">{{ testsResultResource.value()?.testName }}</span>
+                questions and does not represent a formal IQ score.
+              </p>
+            </div>
+
           </div>
         </div>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">

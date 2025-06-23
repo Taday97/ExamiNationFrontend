@@ -6,7 +6,6 @@ import { TestType } from '@shared/interfaces/test.interface';
   providedIn: 'root',
 })
 export class TestUiService {
-
   sanitizer = inject(DomSanitizer);
   baseColors = [
     { color: 'green' },
@@ -59,11 +58,9 @@ export class TestUiService {
   ];
 
   getRandomColor(index: number): string {
-    console.log(index % this.baseColors.length);
     return this.baseColors[index % this.baseColors.length].color;
   }
   getTestTypeData(type: TestType) {
     return this.typeTestData.find((item) => item.type === type);
   }
-
 }

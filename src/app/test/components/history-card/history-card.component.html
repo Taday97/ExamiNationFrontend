@@ -3,9 +3,9 @@
     <div class="flex items-center justify-between mb-4">
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
         [ngClass]="statusClassMap[testResult().status]">
-        {{ testResultStatus[testResult().status] }}
+        {{ testResultStatus[testResult().status] | camelCaseToSpaces  }}
       </span>
-      <span class="text-xs text-gray-500">{{testResult().completedAt| date: 'MMMM d, y' }}</span>
+      <span class="text-xs text-gray-500">{{testResult().completedAt| date: 'MMMM d, y HH:mm' }}</span>
     </div>
     <h3 class="text-lg font-semibold text-gray-900">{{testResult().testName}}</h3>
     <div class="mt-2 flex items-center">

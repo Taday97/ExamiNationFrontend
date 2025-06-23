@@ -45,7 +45,7 @@ export class TestResultService implements IDeleteService<TestResultResponse> {
     userId: string
   ): Observable<ApiResponse<TestResultHistory[]> | null> {
     return this.http.get<ApiResponse<TestResultHistory[]> | null>(
-      `${baseUrl}/TestResult/user/${userId}`
+      `${baseUrl}/testResult/user/${userId}`
     );
   }
   getPage(
@@ -72,12 +72,15 @@ export class TestResultService implements IDeleteService<TestResultResponse> {
       }
     }
     return this.http
-      .get<ApiResponse<TestResultPagesResponse>>(`${baseUrl}/TestResult/pages`, {
-        params,
-      })
+      .get<ApiResponse<TestResultPagesResponse>>(
+        `${baseUrl}/testResult/pages`,
+        {
+          params,
+        }
+      )
       .pipe(tap((resp) => console.log('page' + resp.data.filters)));
   }
   delete(id: string): Observable<TestResultResponse> {
-    return this.http.delete<TestResultResponse>(`${baseUrl}/TestResult/${id}`);
+    return this.http.delete<TestResultResponse>(`${baseUrl}/testResult/${id}`);
   }
 }

@@ -32,10 +32,13 @@ import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 import { TestResultService } from '@shared/services/testResult.service';
-import { TestResultStatus } from '@test/interfaces/test-result.interface';
+import { TestResultHistory, TestResultStatus } from '@test/interfaces/test-result.interface';
 import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
+import { AdminTestResultModalComponent } from '@admin-dashboard/components/admin-test-result-modal/admin-test-result-modal.component';
+
+
 @Component({
-  selector: 'app-answer-admin-pages',
+  selector: 'app-test-result-admin-pages',
   imports: [
     TableModule,
     ButtonModule,
@@ -65,34 +68,33 @@ import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.p
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    AdminTestModalComponent,
     CamelCaseToSpacesPipe,
-  ],
-  templateUrl: './answer-admin-pages.component.html',
+    AdminTestResultModalComponent
+],
+  templateUrl: './test-result-admin-pages.component.html',
   providers: [MessageService, NotificationService],
 })
-export class AnswerAdminPagesComponent {
-  @ViewChild(DeleteConfirmDialogComponent)
+export class TestResultAdminPagesComponent {  @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(AdminTestModalComponent)
-  modal!: AdminTestModalComponent;
+  @ViewChild(AdminTestResultModalComponent)
+  modal!: AdminTestResultModalComponent;
 
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
 
   columns = [
-    { key: 'userEmail', label: 'user' },
+    { key: 'userEmail', label: 'User' },
     { key: 'testName', label: 'Test' },
     { key: 'startedAt', label: 'Start' },
     { key: 'completedAt', label: 'End' },
     { key: 'score', label: 'Score' },
-    // { key: 'shortDescription', label: 'Progress' },
+    { key: 'progressPercentage', label: 'Progress' },
     { key: 'status', label: 'State' },
   ];
   pageSize = signal(10);
   pageNumber = signal(1);
-  sortField = signal('userName');
+  sortField = signal('userEmail');
   sortDescending = signal(false);
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
@@ -171,8 +173,9 @@ export class AnswerAdminPagesComponent {
     this.refreshTrigger.update((prev) => !prev);
   }
 
-  openEditModal(test?: Test) {
-    this.modal.openModal(test);
+  openEditModal(testResultHistory?: TestResultHistory) {
+    console.log('Opening modal for:', testResultHistory);
+    this.modal.openModal(testResultHistory);
   }
 
   openDeleteModal(id: string) {
@@ -182,4 +185,6 @@ export class AnswerAdminPagesComponent {
   cancelDeleteModal() {
     this.deleteDialog.onCancel();
   }
+
+  
 }

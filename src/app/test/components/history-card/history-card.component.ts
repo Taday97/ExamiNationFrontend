@@ -7,6 +7,7 @@ import {
 } from '@test/interfaces/test-result.interface';
 import { TestType } from '@shared/interfaces/test.interface';
 import { PerformanceCardCategoryComponent } from '../../../test-front/components/performance-card-category/performance-card-category.component';
+import { CamelCaseToSpacesPipe } from "../../../shared/pipes/camelCaseToSpaces.pipe";
 
 @Component({
   selector: 'app-history-card',
@@ -14,7 +15,8 @@ import { PerformanceCardCategoryComponent } from '../../../test-front/components
     DatePipe,
     CommonModule,
     RouterLink,
-    PerformanceCardCategoryComponent
+    PerformanceCardCategoryComponent,
+    CamelCaseToSpacesPipe
 ],
   templateUrl: './history-card.component.html',
 })

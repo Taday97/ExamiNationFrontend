@@ -5,10 +5,9 @@ import { TestAdminPageComponent } from './pages/test-admin-page/test-admin-page.
 import { DashboardAdminPageComponent } from './pages/dashboard-admin-page/dashboard-admin-page.component';
 import { QuestionAdminPageComponent } from './pages/question-admin-page/question-admin-page.component';
 import { OptionAdminPageComponent } from './pages/option-admin-page/option-admin-page.component';
-import { CognitiveCategory } from '../shared/interfaces/cognitve-category';
 import { CognitiveCategoryAdminPageComponent } from './pages/cognitive-category-admin-page/cognitive-category-admin-page.component';
 import { ScoringRangesAdminPagesComponent } from './pages/scoring-ranges-admin-pages/scoring-ranges-admin-pages.component';
-import { AnswerAdminPagesComponent } from './pages/answer-admin-pages/answer-admin-pages.component';
+import { TestResultAdminPagesComponent } from './pages/test-result-admin-pages/test-result-admin-pages.component';
 
 export const adminDashboardRoutes: Routes = [
   {
@@ -41,8 +40,8 @@ export const adminDashboardRoutes: Routes = [
         component: ScoringRangesAdminPagesComponent,
       },
       {
-        path: 'answers',
-        component: AnswerAdminPagesComponent,
+        path: 'testResults',
+        component: TestResultAdminPagesComponent,
       },
       {
         path: '**',

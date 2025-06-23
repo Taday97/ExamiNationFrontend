@@ -25,28 +25,31 @@ export interface TestResultDto {
   testType: TestType;
   testName: string;
   score: number;
-  completedAt:Date | null;
+  testMaxScore: number;
+  completedAt: Date | null;
   startedAt: Date;
   status: number;
 }
 
 export interface TestResultHistory {
-  id: string;
-  userId: string;
-  userEmail: null;
-  testId: string;
-  testName: string;
-  testType: TestType;
-  testMaxScore: number;
-  score: number;
   questionCount: number;
   answeredCount: number;
-  progressPercentage: number | null;
-  nextQuestionPage: number | null;
+  nextQuestionPage: number;
+  scoreMax: number;
+  categoryResults: CategoryResult[];
+  progressPercentage: number;
+  id: string;
+  userId: string;
+  userName: null;
+  userEmail: string;
+  testId: string;
+  testName: string;
+  testType: number;
+  testMaxScore: number;
+  score: number;
   completedAt: Date;
   startedAt: Date;
   status: TestResultStatus;
-  categoryResults: CategoryResult[];
 }
 export enum TestResultStatus {
   InProgress = 0,
@@ -71,5 +74,8 @@ export interface TestResultPagesResponse {
   sortBy: null;
   sortDescending: boolean;
   filters: Filters;
-  items: TestResultDto [];
+  items: TestResultHistory[];
 }
+
+
+

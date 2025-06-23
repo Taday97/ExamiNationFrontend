@@ -86,6 +86,7 @@ export class ScoringRangesAdminPagesComponent {
     { key: 'classification', label: 'Classification' },
     { key: 'shortDescription', label: 'Short Description' },
   ];
+  keys = this.columns.map((col) => col.key);
   pageSize = signal(10);
   pageNumber = signal(1);
   sortField = signal('name');
@@ -107,15 +108,16 @@ export class ScoringRangesAdminPagesComponent {
     })),
     loader: ({ request }) => {
       this.loading.set(true);
+      console.log('Filters:', request.filters);
       return this.scoreRangesService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
-          const enrichedItems = res.data.items.map((item,index) => ({
+          const enrichedItems = res.data.items.map((item, index) => ({
             ...item,
             testTypeData: this.testUiService.getTestTypeData(item.testType),
-            randomColor: this.testUiService.getRandomColor(index)
+            randomColor: this.testUiService.getRandomColor(index),
           }));
 
           return enrichedItems;
@@ -135,11 +137,12 @@ export class ScoringRangesAdminPagesComponent {
     this.sortDescending.set(event.sortOrder !== 1);
     const updatedFilters: { [key: string]: string } = {};
     for (const key in event.filters) {
-      const filterValue = event.filters[key]?.value;
+      const filterValue = event.filters[key]?.[0].value;
       if (filterValue) {
         updatedFilters[key] = filterValue;
       }
     }
+    console.log('Setting filters:', updatedFilters);
     this.filters.set(updatedFilters);
   }
 
