@@ -6,6 +6,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { FormsModule } from '@angular/forms';
 import { ImageModule } from 'primeng/image';
 import { AuthService } from '../../../auth/services/auth.service';
+import { RouterLinkActive } from '@angular/router';
+import { UserMenuComponent } from "../../../shared/components/user-menu/user-menu.component";
 
 @Component({
   selector: 'app-admin-tests-header',
@@ -16,7 +18,8 @@ import { AuthService } from '../../../auth/services/auth.service';
     ToggleSwitchModule,
     FormsModule,
     ImageModule,
-  ],
+    UserMenuComponent
+],
   templateUrl: './admin-tests-header.component.html',
 })
 export class AdminTestsHeaderComponent {

@@ -8,7 +8,9 @@
       </div>
     </div>
 
-     <app-admin-test-result-modal (refreshTrigger)="onRefresh()"></app-admin-test-result-modal>
+    <app-test-result-modal [visible]="showModal()" (close)="showModal.set(false)" (refreshTrigger)="onRefresh()">
+    </app-test-result-modal>
+
 
     <p-table #dt [value]="categoriesResource.value()!" [paginator]="true" [rows]="pageSize()"
       [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTestsLazy($event)"

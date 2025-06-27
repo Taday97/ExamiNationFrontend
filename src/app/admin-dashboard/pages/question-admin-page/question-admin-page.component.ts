@@ -28,10 +28,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
-import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
 import { Question, QuestionType } from '@shared/interfaces/question.interface';
 import { QuestionsService } from '@shared/services/questions.service';
 import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
+import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/test-admin-modal.component';
 
 @Component({
   selector: 'app-admin-tests-table',
@@ -64,8 +64,8 @@ import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    AdminTestModalComponent,
-    CamelCaseToSpacesPipe
+    CamelCaseToSpacesPipe,
+    TestAdminModalComponent
 ],
   templateUrl: './question-admin-page.component.html',
   providers: [MessageService, NotificationService],
@@ -74,8 +74,8 @@ export class QuestionAdminPageComponent {
 
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(AdminTestModalComponent)
-  modal!: AdminTestModalComponent;
+  @ViewChild(TestAdminModalComponent)
+  modal!: TestAdminModalComponent;
 
   columns = [
     { key: 'questionNumber', label: 'Nº' },

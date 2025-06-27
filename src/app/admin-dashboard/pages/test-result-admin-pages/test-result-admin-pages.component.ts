@@ -27,15 +27,16 @@ import { ToastModule } from 'primeng/toast';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
-import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 import { TestResultService } from '@shared/services/testResult.service';
-import { TestResultHistory, TestResultStatus } from '@test/interfaces/test-result.interface';
+import {
+  TestResultHistory,
+  TestResultStatus,
+} from '@test/interfaces/test-result.interface';
 import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
-import { AdminTestResultModalComponent } from '@admin-dashboard/components/admin-test-result-modal/admin-test-result-modal.component';
-
+import { TestResultModalComponent } from '@admin-dashboard/pages/test-result-admin-pages/test-result-modal/test-result-modal.component';
 
 @Component({
   selector: 'app-test-result-admin-pages',
@@ -69,16 +70,17 @@ import { AdminTestResultModalComponent } from '@admin-dashboard/components/admin
     ToastModule,
     DeleteConfirmDialogComponent,
     CamelCaseToSpacesPipe,
-    AdminTestResultModalComponent
-],
+    TestResultModalComponent,
+  ],
   templateUrl: './test-result-admin-pages.component.html',
   providers: [MessageService, NotificationService],
 })
-export class TestResultAdminPagesComponent {  @ViewChild(DeleteConfirmDialogComponent)
+export class TestResultAdminPagesComponent {
+  @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(AdminTestResultModalComponent)
-  modal!: AdminTestResultModalComponent;
-
+  @ViewChild(TestResultModalComponent)
+  modal!: TestResultModalComponent;
+  showModal = signal(false);
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
@@ -175,7 +177,12 @@ export class TestResultAdminPagesComponent {  @ViewChild(DeleteConfirmDialogComp
 
   openEditModal(testResultHistory?: TestResultHistory) {
     console.log('Opening modal for:', testResultHistory);
-    this.modal.openModal(testResultHistory);
+    this.showModal.set(true); // si realmente lo usás para algo
+    if (this.modal) {
+      this.modal.openModal(testResultHistory);
+    } else {
+      console.error('Modal no inicializado todavía');
+    }
   }
 
   openDeleteModal(id: string) {
@@ -185,6 +192,4 @@ export class TestResultAdminPagesComponent {  @ViewChild(DeleteConfirmDialogComp
   cancelDeleteModal() {
     this.deleteDialog.onCancel();
   }
-
-  
 }

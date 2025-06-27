@@ -1,0 +1,59 @@
+@if(answersResource.value()?.length === 0){
+  <p>No answers available.</p>
+}@else{
+  <p-dataview [value]="answersResource.value()!" [paginator]="true" [rows]="pageSize()" [totalRecords]="totalRecords"
+  [lazy]="true" (onLazyLoad)="loadTestsLazy($event)" [rowsPerPageOptions]="[2, 5]" paginatorPosition="bottom"
+  [paginator]="true">
+  <ng-template #list let-items>
+    <div class="flex flex-col gap-4">
+      <div *ngFor="let item of items" class="border border-gray-200 rounded-lg overflow-hidden">
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <div class="bg-gray-50 p-4 border-b border-gray-200">
+            <p class="font-medium">{{ item.questionNumber }}. {{ item.questionText }}</p>
+          </div>
+          <div class="p-4">
+            @if (!item.isCorrect) {
+            <div class="flex items-start mb-4">
+              <div class="w-5 h-5 flex items-center justify-center mt-0.5 mr-2 text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z" />
+                </svg>
+              </div>
+              <div>
+                <p>{{ item.userAnswerText }}</p>
+                <p class="text-xs text-gray-500 mt-1">Select Answer</p>
+              </div>
+            </div>
+            }
+            <div class="flex items-start mt-1 border-t border-gray-100">
+              @if (item.isCorrect) {
+              <div class="w-5 h-5 flex items-center justify-center mt-0.5 mr-2 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  class="w-5 h-5 mt-0.5 text-green-600 ng-star-inserted">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 4a8 8 0 100 16 8 8 0 000-16z M9 12l2 2 4-4"></path>
+                </svg>
+              </div>
+              } @else {
+              <div class="w-5 h-5 flex items-center justify-center mt-0.5 mr-2 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M11 9h2V7h-2m1 13c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8m0-18A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2m-1 15h2v-6h-2z" />
+                </svg>
+              </div>
+              }
+
+              <div>
+                <p class="text-sm text-gray-600">{{ item.correctAnswerText }}</p>
+                <p class="text-xs text-green-600 mt-1">Correct answer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dataview>
+}
+

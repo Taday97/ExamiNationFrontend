@@ -11,7 +11,7 @@ import {
   TestResultPagesResponse,
   TestResultSummary,
 } from '@test/interfaces/test-result.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IDeleteService } from './interfaces/delete-service.interface';
 const baseUrl = environment.baseUrl;
@@ -82,5 +82,8 @@ export class TestResultService implements IDeleteService<TestResultResponse> {
   }
   delete(id: string): Observable<TestResultResponse> {
     return this.http.delete<TestResultResponse>(`${baseUrl}/testResult/${id}`);
+  }
+  getById(id: string): Observable<TestResultResponse> {
+    return this.http.get<TestResultResponse>(`${baseUrl}/testResult/${id}`);
   }
 }

@@ -15,11 +15,9 @@ import { TestsService } from '@shared/services/tests.service';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { handle } from 'src/app/utils/handle.helper';
-import { MessageService, ConfirmationService } from 'primeng/api';
 import { TestImagePipe } from '@test/pipes/test-image.pipe';
-
 @Component({
-  selector: 'app-admin-test-modal',
+  selector: 'app-test-admin-modal',
   imports: [
     DialogModule,
     FormsModule,
@@ -27,10 +25,9 @@ import { TestImagePipe } from '@test/pipes/test-image.pipe';
     CommonModule,
     ReactiveFormsModule,
   ],
-  providers: [MessageService, NotificationService],
-  templateUrl: './admin-test-modal.component.html',
+  templateUrl: './test-admin-modal.component.html',
 })
-export class AdminTestModalComponent {
+export class TestAdminModalComponent {
   constructor(private notificationService: NotificationService) {}
   @Output() refreshTrigger = new EventEmitter<boolean>();
   pipe = new TestImagePipe();

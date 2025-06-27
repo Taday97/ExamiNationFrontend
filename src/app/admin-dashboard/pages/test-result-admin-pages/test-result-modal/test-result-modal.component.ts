@@ -1,23 +1,32 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  Output,
+  signal,
+} from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { catchError, firstValueFrom, map, of } from 'rxjs';
+import { catchError, firstValueFrom, map, of, single } from 'rxjs';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { TestResultService } from '@shared/services/testResult.service';
 import { DataViewModule } from 'primeng/dataview';
 import {
-  TestResultHistory,
   TestResultStatus,
   TestResultSummary,
 } from '@test/interfaces/test-result.interface';
-import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
+import { CamelCaseToSpacesPipe } from '../../../../shared/pipes/camelCaseToSpaces.pipe';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { QuestionsService } from '@shared/services/questions.service';
+import { AnswerListComponent } from '../answer-list/answer-list.component';
+import { TestResultHistory } from '../../../../test/interfaces/test-result.interface';
+import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 
 @Component({
-  selector: 'app-admin-test-result-modal',
+  selector: 'app-test-result-modal',
   imports: [
     DialogModule,
     FormsModule,
@@ -25,26 +34,30 @@ import { QuestionsService } from '@shared/services/questions.service';
     ReactiveFormsModule,
     CamelCaseToSpacesPipe,
     DataViewModule,
+    AnswerListComponent,
   ],
   providers: [MessageService, NotificationService],
-  templateUrl: './admin-test-result-modal.component.html',
+  templateUrl: './test-result-modal.component.html',
 })
-export class AdminTestResultModalComponent {
+export class TestResultModalComponent {
   constructor(private notificationService: NotificationService) {}
   @Output() refreshTrigger = new EventEmitter<boolean>();
 
+  visible = input(false);
   testResultStatus = TestResultStatus;
   dialog = signal(false);
-  submitted = signal(false);
+  submitted = input(false);
 
   private fb = inject(FormBuilder);
   testResultService = inject(TestResultService);
   questionsService = inject(QuestionsService);
 
   testResult = signal<TestResultSummary | null>(null);
+  testResultHistory = signal<TestResultHistory | null>(null);
+  testUiService = inject(TestUiService);
   currentTest = this.testResult();
   isNew = !this.currentTest || this.currentTest.id === 'new';
-
+  isOpen = false;
   async loadTest(id: string) {
     try {
       const testResult = await firstValueFrom(
@@ -56,44 +69,7 @@ export class AdminTestResultModalComponent {
       this.notificationService.error('Failed to load testresult data');
     }
   }
-  questionsResource = rxResource({
-    request: () => ({
-      testId: this.testResult()?.testId,
-      pageNumber: 1,
-    }),
-    loader: ({ request }) => {
-      return this.questionsService
-        .getQuetionsPage({
-          filters: { testId: request.testId! },
-          sortBy: 'questionNumber',
-          sortDescending: false,
-          pageNumber: request.pageNumber,
-          pageSize: 2,
-        })
-        .pipe(
-          map((response) => {
 
-            const questions = response.data.questions.items.map((item: any) => {
-              const selectedOption = item.options?.find(
-                (opt: any) => opt.id === item.selectedOptionId
-              );
-              return {
-                ...item,
-                selectedOptionText: selectedOption?.text || null,
-              };
-            });
-            console.log('Questions loaded:', questions);
-            return questions;
-          }),
-          catchError((error) => {
-            const backendMessage =
-              error.error || 'Unknown error while fetching questions.';
-            this.notificationService.error(backendMessage);
-            return of(null);
-          })
-        );
-    },
-  });
   getStatusName(): string {
     const status = this.testResult()?.testResultDto?.status;
     var statusName = TestResultStatus[status!];
@@ -133,13 +109,16 @@ export class AdminTestResultModalComponent {
       .map((e) => e.trim())
       .filter((e) => e.length > 0);
   }
-  openModal(testresultResult?: TestResultHistory) {
+  async openModal(testresultResult?: TestResultHistory) {
     if (testresultResult) {
-      this.loadTest(testresultResult!.id);
+      this.testResultHistory.set(testresultResult); // primero seteas
+
+      await this.loadTest(testresultResult.id); // luego haces la carga
     } else {
       this.testResult.set(null);
+      this.testResultHistory.set(null);
     }
-    this.dialog.set(true);
+    this.dialog.set(true); // abres el modal después
   }
 
   closeModal() {

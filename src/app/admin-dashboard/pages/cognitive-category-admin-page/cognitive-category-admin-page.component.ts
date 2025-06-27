@@ -27,11 +27,11 @@ import { ToastModule } from 'primeng/toast';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
-import { AdminTestModalComponent } from '../../components/admin-test-modal/admin-test-modal.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
 import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
+import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/test-admin-modal.component';
 
 @Component({
   selector: 'app-cognitive-category-admin-page',
@@ -64,7 +64,7 @@ import { TestUiService } from '@admin-dashboard/services/test-ui.service';
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    AdminTestModalComponent,
+    TestAdminModalComponent,
   ],
   templateUrl: './cognitive-category-admin-page.component.html',
   providers: [MessageService, NotificationService],
@@ -72,8 +72,8 @@ import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 export class CognitiveCategoryAdminPageComponent {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(AdminTestModalComponent)
-  modal!: AdminTestModalComponent;
+  @ViewChild(TestAdminModalComponent)
+  modal!: TestAdminModalComponent;
 
   loading = signal(false);
   totalRecords = 0;

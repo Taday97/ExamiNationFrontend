@@ -17,7 +17,7 @@
       </p-button>
     </div>
 
-    <app-admin-test-modal (refreshTrigger)="onRefresh()" />
+    <app-test-admin-modal (refreshTrigger)="onRefresh()" />
 
     <p-table #dt [value]="categoriesResource.value()!" [paginator]="true" [rows]="pageSize()"
       [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTestsLazy($event)"
