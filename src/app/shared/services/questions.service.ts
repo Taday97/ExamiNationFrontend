@@ -1,26 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { PagesResponse } from '@test/interfaces/pages-response.interface';
 import {
   Questions,
   QuestionsResponse,
 } from '@shared/interfaces/question.interface';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Question, Filters } from '../interfaces/question.interface';
 import { IDeleteService } from './interfaces/delete-service.interface';
 import { QueryOptions } from '@shared/interfaces/query-option.interface';
+import { PagesResponse } from '@test/interfaces/pages-response.interface';
+import { AbstractCrudService } from './abstract-crud.service';
 
 const baseUrl = environment.baseUrl;
 
 @Injectable({ providedIn: 'root' })
-export class QuestionsService implements IDeleteService<QuestionsResponse> {
-  constructor() {}
-
-  private http = inject(HttpClient);
+export class QuestionsService
+  extends AbstractCrudService<Question>
+  implements IDeleteService<QuestionsResponse>
+{
+  constructor(http: HttpClient) {
+    super(http, `${environment.baseUrl}/Question`);
+  }
 
   delete(id: string): Observable<QuestionsResponse> {
-    return this.http.delete<QuestionsResponse>(`${baseUrl}/Question/${id}`);
+    return this.http.delete<QuestionsResponse>(`${this.baseUrl}/Question/${id}`);
   }
   getQuetionsPage(option: QueryOptions): Observable<QuestionsResponse> {
     const {
@@ -44,7 +48,7 @@ export class QuestionsService implements IDeleteService<QuestionsResponse> {
       }
     }
     return this.http
-      .get<QuestionsResponse>(`${baseUrl}/question/paged-with-test`, {
+      .get<QuestionsResponse>(`${baseUrl}/question/paged-with-question`, {
         params,
       })
       .pipe(tap((resp) => console.log('page' + resp.data.questions.filters)));
@@ -75,5 +79,8 @@ export class QuestionsService implements IDeleteService<QuestionsResponse> {
         params,
       })
       .pipe(tap((resp) => console.log('page' + resp.data.filters)));
+  }
+  getNextQuestionNumber(testId: string): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/test/${testId}/next-number`);
   }
 }

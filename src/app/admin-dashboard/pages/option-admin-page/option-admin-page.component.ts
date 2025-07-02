@@ -30,10 +30,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { TestAdminModalComponent } from '@admin-dashboard/pages/test-admin-page/test-admin-modal/test-admin-modal.component';
-import { OptionsService } from '@admin-dashboard/services/options.service';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
 import { Question } from '@shared/interfaces/question.interface';
+import { OptionService } from '@admin-dashboard/services/options.service';
 
 @Component({
   selector: 'app-option-admin-page',
@@ -93,7 +93,7 @@ export class OptionAdminPageComponent {
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
 
-  optionsService = inject(OptionsService);
+  optionsService = inject(OptionService);
 
   optionsResource = rxResource({
     request: computed(() => ({

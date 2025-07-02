@@ -7,21 +7,36 @@ import { PagesResponse } from '@test/interfaces/pages-response.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IDeleteService } from '../../shared/services/interfaces/delete-service.interface';
-import { CognitiveCategory, CognitiveCategoryResponse } from '@shared/interfaces/cognitve-category';
+import {
+  CognitiveCategory,
+  CognitiveCategoryPagesResponse,
+  CognitiveCategoryResponse,
+} from '@shared/interfaces/cognitve-category';
 import { ApiResponse } from '@test/interfaces/api-response.interface';
 
 const baseUrl = environment.baseUrl;
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class CognitiveCategoryService implements IDeleteService<ApiResponse<CognitiveCategory>> {
+export class CognitiveCategoryService
+  implements IDeleteService<ApiResponse<CognitiveCategory>>
+{
   constructor() {}
   private http = inject(HttpClient);
 
   delete(id: string): Observable<ApiResponse<CognitiveCategory>> {
-    return this.http.delete<ApiResponse<CognitiveCategory>>(`${baseUrl}/cognitiveCategory/${id}`);
+    return this.http.delete<ApiResponse<CognitiveCategory>>(
+      `${baseUrl}/cognitiveCategory/${id}`
+    );
   }
-  getPage(option: QueryOptions): Observable<PagesResponse<CognitiveCategoryResponse>> {
+  getAll(): Observable<CognitiveCategoryResponse> {
+    return this.http
+      .get<CognitiveCategoryResponse>(`${baseUrl}/cognitiveCategory`)
+      .pipe(tap((resp) => console.log(resp)));
+  }
+  getPage(
+    option: QueryOptions
+  ): Observable<ApiResponse<CognitiveCategoryPagesResponse>> {
     const {
       filters = {},
       sortBy = '',
@@ -43,10 +58,12 @@ export class CognitiveCategoryService implements IDeleteService<ApiResponse<Cogn
       }
     }
     return this.http
-      .get<PagesResponse<CognitiveCategoryResponse>>(`${baseUrl}/cognitiveCategory/pages`, {
-        params,
-      })
+      .get<ApiResponse<CognitiveCategoryPagesResponse>>(
+        `${baseUrl}/cognitiveCategory/pages`,
+        {
+          params,
+        }
+      )
       .pipe(tap((resp) => console.log('page' + resp.data.filters)));
   }
 }
-

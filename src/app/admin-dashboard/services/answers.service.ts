@@ -7,21 +7,21 @@ import { PagesResponse } from '@test/interfaces/pages-response.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IDeleteService } from '../../shared/services/interfaces/delete-service.interface';
-import { OptionsResponse } from '@shared/interfaces/option.interface';
 import { Option, Question, Questions } from '@shared/interfaces/question.interface';
 import { AnswerResults } from '@shared/interfaces/answer';
+import { OptionResponse } from '@shared/interfaces/option.interface';
 
 
 const baseUrl = environment.baseUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class AnswersService implements IDeleteService<OptionsResponse> {
+export class AnswersService implements IDeleteService<OptionResponse> {
   constructor() {}
   private http = inject(HttpClient);
 
-  delete(id: string): Observable<OptionsResponse> {
-    return this.http.delete<OptionsResponse>(`${baseUrl}/answer/${id}`);
+  delete(id: string): Observable<OptionResponse> {
+    return this.http.delete<OptionResponse>(`${baseUrl}/answer/${id}`);
   }
   getPageDetails(option: QueryOptions): Observable<PagesResponse<AnswerResults>> {
     const {

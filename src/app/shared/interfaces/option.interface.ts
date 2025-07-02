@@ -1,7 +1,14 @@
-import { Filters } from "./test.interface";
+import { Filters } from './test.interface';
 
-export interface OptionsResponse {
-  items: Option[];
+export interface OptionResponse {
+  success: boolean;
+  message: string;
+  errors: any[];
+  data: OptionData[];
+}
+
+export interface OptionPagesResponse {
+  items: OptionData[];
   totalCount: number;
   pageNumber: number;
   pageSize: number;
@@ -10,12 +17,10 @@ export interface OptionsResponse {
   filters: Filters;
 }
 
-
-export interface Option {
-  id: string;
+export interface OptionData {
+  id: string| null;
   text: string;
   isCorrect: boolean;
-  questionId: string;
-  questionText: null;
+  questionId: string | null;
+  questionText: string | null;
 }
-

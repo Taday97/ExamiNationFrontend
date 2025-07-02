@@ -177,7 +177,7 @@ export class TestResultAdminPagesComponent {
 
   openEditModal(testResultHistory?: TestResultHistory) {
     console.log('Opening modal for:', testResultHistory);
-    this.showModal.set(true); // si realmente lo usás para algo
+    this.showModal.set(true); 
     if (this.modal) {
       this.modal.openModal(testResultHistory);
     } else {

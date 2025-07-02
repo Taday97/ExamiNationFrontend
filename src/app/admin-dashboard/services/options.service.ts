@@ -7,21 +7,33 @@ import { PagesResponse } from '@test/interfaces/pages-response.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IDeleteService } from '../../shared/services/interfaces/delete-service.interface';
-import { OptionsResponse } from '@shared/interfaces/option.interface';
-import { Option, Question, Questions } from '@shared/interfaces/question.interface';
+
+import { ApiResponse } from '@test/interfaces/api-response.interface';
+import { OptionData, OptionPagesResponse, OptionResponse } from '@shared/interfaces/option.interface';
 
 const baseUrl = environment.baseUrl;
 @Injectable({
   providedIn: 'root',
 })
-export class OptionsService implements IDeleteService<OptionsResponse> {
+export class OptionService
+  implements IDeleteService<ApiResponse<OptionData>>
+{
   constructor() {}
   private http = inject(HttpClient);
 
-  delete(id: string): Observable<OptionsResponse> {
-    return this.http.delete<OptionsResponse>(`${baseUrl}/option/${id}`);
+  delete(id: string): Observable<ApiResponse<OptionData>> {
+    return this.http.delete<ApiResponse<OptionData>>(
+      `${baseUrl}/option/${id}`
+    );
   }
-  getPage(option: QueryOptions): Observable<PagesResponse<Questions>> {
+  getAll(): Observable<OptionResponse> {
+    return this.http
+      .get<OptionResponse>(`${baseUrl}/option`)
+      .pipe(tap((resp) => console.log(resp)));
+  }
+  getPage(
+    option: QueryOptions
+  ): Observable<ApiResponse<OptionPagesResponse>> {
     const {
       filters = {},
       sortBy = '',
@@ -43,9 +55,12 @@ export class OptionsService implements IDeleteService<OptionsResponse> {
       }
     }
     return this.http
-      .get<PagesResponse<Questions>>(`${baseUrl}/option/pages`, {
-        params,
-      })
+      .get<ApiResponse<OptionPagesResponse>>(
+        `${baseUrl}/option/pages`,
+        {
+          params,
+        }
+      )
       .pipe(tap((resp) => console.log('page' + resp.data.filters)));
   }
 }

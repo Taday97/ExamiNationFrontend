@@ -1,0 +1,129 @@
+<p-dialog [(visible)]="dialog" [style]="{ width: '40rem' }" header="Create Question" [modal]="true" [closable]="true"
+  (onHide)="resetForm()">
+  <form [formGroup]="questionForm" class="p-0" (ngSubmit)="onSubmit()">
+
+    <input type="hidden" formControlName="id" />
+    <!-- Texto de la pregunta -->
+    <div class="mb-4">
+      <label for="test-name" class="block text-sm font-medium text-gray-700">
+        Question <span class="text-red-500">*</span>
+      </label>
+      <textarea formControlName="text" id="text" rows="3"
+        class="mt-1 w-full px-3 py-2 border rounded-md hover:border-gray-400"
+        placeholder="Escribe la pregunta aquí"></textarea>
+      <form-error-label [control]="questionForm.get('text')!" />
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-3">
+      <div>
+        <label for="test-name" class="block text-sm font-medium text-gray-700">
+          Type Question <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary ng-pristine ng-valid ng-touched"
+          formControlName="type" [options]="questionsTypes" placeholder="Select Question Type" optionLabel="label"
+          (onChange)="onQuestionTypeSelected($event.value)" optionValue="value" inputId="type"></p-dropdown>
+        <form-error-label [control]="questionForm.get('type')!" />
+      </div>
+
+      <div>
+        <label for="test-name" class="block text-sm font-medium text-gray-700">
+          Test <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary ng-pristine ng-valid ng-touched"
+          formControlName="testId" [options]="tests()?.data" placeholder="Select test" optionLabel="name"
+          optionValue="id" inputId="testId" (onChange)="onTestSelected($event.value)"></p-dropdown>
+        <form-error-label [control]="questionForm.get('testId')!" />
+      </div>
+    </div>
+
+
+    <!-- Categoría y números -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="test-name" class="block text-sm font-medium text-gray-700">
+          Cognitive Category
+        </label>
+        <p-dropdown
+          class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary ng-pristine ng-valid ng-touched"
+          formControlName="cognitiveCategoryId" [options]="cognitiveCategories()?.data" placeholder="Select cognitive category"
+          optionLabel="name" optionValue="id" inputId="cognitiveCategoryId"></p-dropdown>
+        <form-error-label [control]="questionForm.get('cognitiveCategoryId')!" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="test-name" class="block text-sm font-medium text-gray-700">
+            Number <span class="text-red-500">*</span>
+          </label>
+          <input type="number" formControlName="questionNumber" id="questionNumber"
+            class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
+            placeholder="1" />
+          <form-error-label [control]="questionForm.get('questionNumber')!" />
+        </div>
+        <div>
+          <label for="test-name" class="block text-sm font-medium text-gray-700">
+            Score <span class="text-red-500">*</span>
+          </label>
+          <input type="number" formControlName="score" id="score"
+            class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
+            placeholder="5" />
+          <form-error-label [control]="questionForm.get('score')!" />
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4" formArrayName="options">
+      <div class="flex justify-between items-center mb-3">
+        <label class="block text-sm font-medium text-gray-700">Options</label>
+        <button type="button" (click)="addOption()" class="text-sm text-primary flex items-center">
+          <i class="ri-add-line mr-1"></i> Add option
+        </button>
+      </div>
+
+      <div *ngFor="let opt of options.controls; let i = index" [formGroupName]="i"
+        class="flex items-center space-x-3 mt-2 px-3 py-0 rounded-md border mb-2 hover:border-gray-400">
+
+        <input type="checkbox" [checked]="opt.value.isCorrect"  (change)="toggleOption(i, $event)"/>
+
+        <input type="text" formControlName="text" (blur)="onOptionBlur(i)" placeholder="Write an option"
+          class="flex-1 border-none outline-none focus:ring-0 text-base py-2" />
+
+        <button type="button" (click)="removeOption(i)"
+          class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-500 rounded hover:bg-red-100">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
+            <path fill="currentColor"
+              d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zm-7 11q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17M7 6v13z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Footer buttons -->
+    <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+      <button type="button" (click)="closeModal()"
+        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Cancelar
+      </button>
+      <button type="submit"
+        class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+        <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m15.3 5.3l-6.8 6.8l-2.8-2.8l-1.4 1.4l4.2 4.2l8.2-8.2z" />
+        </svg>
+        Guardar
+      </button>
+    </div>
+
+  </form>
+
+
+
+
+
+</p-dialog>

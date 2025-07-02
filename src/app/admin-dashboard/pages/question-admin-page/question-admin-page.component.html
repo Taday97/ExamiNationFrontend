@@ -17,7 +17,7 @@
       </p-button>
     </div>
 
-    <app-test-admin-modal (refreshTrigger)="onRefresh()" />
+    <app-question-admin-modal (refreshTrigger)="onRefresh()" [cognitiveCategories]="cognitiveCategories()!" [tests]="tests()!" />
 
     <p-table #dt [value]="questionsResource.value()!" [paginator]="true" [rows]="pageSize()"
       [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTestsLazy($event)"

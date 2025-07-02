@@ -1,3 +1,4 @@
+import { OptionData } from './option.interface';
 import { Test } from './test.interface';
 
 export interface QuestionsResponse {
@@ -27,7 +28,7 @@ export interface Filters {
 }
 
 export interface Question {
-  options: Option[];
+  options: OptionData[];
   id: string;
   text: string;
   type: number;

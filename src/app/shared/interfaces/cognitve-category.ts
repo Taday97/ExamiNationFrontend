@@ -1,18 +1,14 @@
-import { TestType } from "./test.interface";
+import { Filters, TestType } from "./test.interface";
+
 
 
 export interface CognitiveCategoryResponse {
-  items:          CognitiveCategory[];
-  totalCount:     number;
-  pageNumber:     number;
-  pageSize:       number;
-  sortBy:         null;
-  sortDescending: boolean;
-  filters:        Filters;
+  success: boolean;
+  message: string;
+  errors: any[];
+  data: CognitiveCategory[];
 }
 
-export interface Filters {
-}
 export interface CognitiveCategory {
   id: string;
   name: string;
@@ -22,4 +18,13 @@ export interface CognitiveCategory {
   isCorrect: boolean;
 }
 
+export interface CognitiveCategoryPagesResponse {
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  sortBy: null;
+  sortDescending: boolean;
+  filters: Filters;
+  items: CognitiveCategory[];
+}
 

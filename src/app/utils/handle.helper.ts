@@ -9,7 +9,18 @@ export async function handle<T>(
     notification.success(onSuccess);
     return result;
   } catch (err: any) {
-    const msg = err?.error?.message ?? onError ?? 'Unexpected error';
+    let msg = onError ?? 'Unexpected error';
+
+    if (err?.error?.errors) {
+      const errors = err.error.errors;
+      const allErrors = Object.values(errors).flat();
+      if (allErrors.length > 0) {
+        msg = allErrors.join('\n');
+      }
+    } else if (err?.error?.message) {
+      msg = err.error.message;
+    }
+
     notification.error(msg);
     return undefined;
   }

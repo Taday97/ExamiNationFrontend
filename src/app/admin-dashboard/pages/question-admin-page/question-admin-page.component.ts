@@ -1,4 +1,11 @@
-import { Component, computed, inject, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -6,9 +13,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
+import { TestsService } from '@shared/services/tests.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
-import { Test, TestType } from '@shared/interfaces/test.interface';
+import {
+  Test,
+  TestsResponse,
+  TestType,
+} from '@shared/interfaces/test.interface';
+import { TestImagePipe } from '@test/pipes/test-image.pipe';
 
 import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -24,17 +37,28 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ToastModule } from 'primeng/toast';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
+import { QuestionAdminModalComponent } from './question-admin-modal/question-admin-modal.component';
 import { Question, QuestionType } from '@shared/interfaces/question.interface';
+import { FormUtils } from 'src/app/utils/form-utils';
 import { QuestionsService } from '@shared/services/questions.service';
-import { CamelCaseToSpacesPipe } from "@shared/pipes/camelCaseToSpaces.pipe";
-import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/test-admin-modal.component';
+import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
+import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
+import { enumToOptions } from 'src/app/utils/enum-utils';
+import { OptionService } from '@admin-dashboard/services/options.service';
+import { CognitiveCategoryResponse } from '@shared/interfaces/cognitve-category';
+import { OptionResponse } from '@shared/interfaces/option.interface';
 
 @Component({
-  selector: 'app-admin-tests-table',
+  selector: 'app-admin-questions-table',
   imports: [
     TableModule,
     ButtonModule,
@@ -65,29 +89,30 @@ import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/tes
     ToastModule,
     DeleteConfirmDialogComponent,
     CamelCaseToSpacesPipe,
-    TestAdminModalComponent
-],
+    QuestionAdminModalComponent,
+  ],
   templateUrl: './question-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
-export class QuestionAdminPageComponent {
-
+export class QuestionAdminPageComponent implements OnInit {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(TestAdminModalComponent)
-  modal!: TestAdminModalComponent;
+  @ViewChild(QuestionAdminModalComponent)
+  modal!: QuestionAdminModalComponent;
 
+  private fb = inject(FormBuilder);
   columns = [
     { key: 'questionNumber', label: 'Nº' },
     { key: 'text', label: 'Question' },
     { key: 'type', label: 'Type' },
-    { key: 'testName', label: 'Test' },
+    { key: 'questionName', label: 'Test' },
     { key: 'cognitiveCategoryName', label: 'Category' },
     { key: 'score', label: 'Score' },
   ];
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
+  QuestionType = QuestionType;
 
   pageSize = signal(10);
   pageNumber = signal(1);
@@ -96,9 +121,45 @@ export class QuestionAdminPageComponent {
   filters = signal<{ [key: string]: string }>({});
   refreshTrigger = signal(false);
 
-  QuestionType = QuestionType;
-  questionService = inject(QuestionsService);
+  dialog = signal(false);
+  question = signal<Question | null>(null);
+  currentTest = this.question();
+  isNew = !this.currentTest || this.currentTest.id === 'new';
 
+  questionForm = this.fb.group({
+    id: [''],
+    name: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
+    ],
+    description: ['', [Validators.maxLength(500)]],
+    imageUrl: ['', [FormUtils.imageValidator]],
+  });
+
+  resetForm() {
+    this.questionForm.reset({
+      id: '',
+      name: '',
+      description: '',
+      imageUrl: '',
+    });
+  }
+
+  questionService = inject(QuestionsService);
+  testsService = inject(TestsService);
+  categoriesService = inject(CognitiveCategoryService);
+  optionsService = inject(OptionService);
+
+
+  tests = signal<TestsResponse | null>(null);
+  cognitiveCategories = signal<CognitiveCategoryResponse | null>(null);
+
+  ngOnInit() {
+    this.testsService.getAll().subscribe((t) => this.tests.set(t));
+    this.categoriesService
+      .getAll()
+      .subscribe((c) => this.cognitiveCategories.set(c));
+  }
   questionsResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
@@ -161,8 +222,8 @@ export class QuestionAdminPageComponent {
     this.refreshTrigger.update((prev) => !prev);
   }
 
-  openEditModal(test?: Test) {
-    this.modal.openModal(test);
+  openEditModal(question?: Question) {
+    this.modal.openModal(question);
   }
 
   openDeleteModal(id: string) {
