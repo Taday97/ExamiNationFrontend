@@ -7,14 +7,14 @@ import { QuestionCardComponent } from '@test/components/question-card/question-c
 import { QuestionNavigationComponent } from '@test/components/question-navigation/question-navigation.component';
 import { TestProgressComponent } from '@test/components/test-progress/test-progress.component';
 import { TestIntroductionComponent } from '@test/components/test-introduction/test-introduction.component';
-import { QuestionsService } from '@shared/services/questions.service';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { Test } from '@shared/interfaces/test.interface';
 import { PaginationService } from '@shared/components/pagination/pagination.service';
-import { TestResultService } from '@shared/services/testResult.service';
-import { LoadingService } from '@shared/services/loadingService .service';
+import { TestResultService } from '@admin-dashboard/services/testResult.service';
+import { LoadingService } from '@shared/services/loadingService.service';
+import { QuestionsService } from '@shared/services/questions.service';
 
 @Component({
   selector: 'test-page-start',

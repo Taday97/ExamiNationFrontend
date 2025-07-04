@@ -30,7 +30,7 @@ import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
-import { TestResultService } from '@shared/services/testResult.service';
+import { TestResultService } from '@admin-dashboard/services/testResult.service';
 import {
   TestResultHistory,
   TestResultStatus,
@@ -177,7 +177,7 @@ export class TestResultAdminPagesComponent {
 
   openEditModal(testResultHistory?: TestResultHistory) {
     console.log('Opening modal for:', testResultHistory);
-    this.showModal.set(true); 
+    this.showModal.set(true);
     if (this.modal) {
       this.modal.openModal(testResultHistory);
     } else {

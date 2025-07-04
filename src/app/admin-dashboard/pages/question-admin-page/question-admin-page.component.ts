@@ -13,7 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
-import { TestsService } from '@shared/services/tests.service';
+import { TestsService } from '@admin-dashboard/services/tests.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import {
@@ -49,13 +49,14 @@ import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete
 import { QuestionAdminModalComponent } from './question-admin-modal/question-admin-modal.component';
 import { Question, QuestionType } from '@shared/interfaces/question.interface';
 import { FormUtils } from 'src/app/utils/form-utils';
-import { QuestionsService } from '@shared/services/questions.service';
+
 import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
 import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { enumToOptions } from 'src/app/utils/enum-utils';
 import { OptionService } from '@admin-dashboard/services/options.service';
-import { CognitiveCategoryResponse } from '@shared/interfaces/cognitve-category';
 import { OptionResponse } from '@shared/interfaces/option.interface';
+import { QuestionsService } from '@shared/services/questions.service';
+import { CognitiveCategoriesResponse } from '@shared/interfaces/cognitve-category';
 
 @Component({
   selector: 'app-admin-questions-table',
@@ -152,7 +153,7 @@ export class QuestionAdminPageComponent implements OnInit {
 
 
   tests = signal<TestsResponse | null>(null);
-  cognitiveCategories = signal<CognitiveCategoryResponse | null>(null);
+  cognitiveCategories = signal<CognitiveCategoriesResponse | null>(null);
 
   ngOnInit() {
     this.testsService.getAll().subscribe((t) => this.tests.set(t));

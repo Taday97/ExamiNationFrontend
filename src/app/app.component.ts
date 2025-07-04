@@ -6,7 +6,7 @@ import {
   Router,
   RouterOutlet
 } from '@angular/router';
-import { LoadingService } from '@shared/services/loadingService .service';
+import { LoadingService } from '@shared/services/loadingService.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({

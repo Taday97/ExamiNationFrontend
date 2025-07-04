@@ -4,12 +4,12 @@ import {
   TestPagesResponse,
   TestsResponse,
   TestType,
-} from '../interfaces/test.interface';
-import { QueryOptions } from '../interfaces/query-option.interface';
+} from '../../shared/interfaces/test.interface';
+import { QueryOptions } from '../../shared/interfaces/query-option.interface';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { inject, Injectable } from '@angular/core';
-import { IDeleteService } from './interfaces/delete-service.interface';
+import { IDeleteService } from '../../shared/services/interfaces/delete-service.interface';
 
 const baseUrl = environment.baseUrl;
 

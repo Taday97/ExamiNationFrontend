@@ -4,7 +4,6 @@ import { AdminDashboardLayoutComponent } from './layout/admin-dashboard-layout/a
 import { TestAdminPageComponent } from './pages/test-admin-page/test-admin-page.component';
 import { DashboardAdminPageComponent } from './pages/dashboard-admin-page/dashboard-admin-page.component';
 import { QuestionAdminPageComponent } from './pages/question-admin-page/question-admin-page.component';
-import { OptionAdminPageComponent } from './pages/option-admin-page/option-admin-page.component';
 import { CognitiveCategoryAdminPageComponent } from './pages/cognitive-category-admin-page/cognitive-category-admin-page.component';
 import { ScoringRangesAdminPagesComponent } from './pages/scoring-ranges-admin-pages/scoring-ranges-admin-pages.component';
 import { TestResultAdminPagesComponent } from './pages/test-result-admin-pages/test-result-admin-pages.component';
@@ -26,10 +25,6 @@ export const adminDashboardRoutes: Routes = [
       {
         path: 'questions',
         component: QuestionAdminPageComponent,
-      },
-      {
-        path: 'options',
-        component: OptionAdminPageComponent,
       },
       {
         path: 'cognitiveCategories',

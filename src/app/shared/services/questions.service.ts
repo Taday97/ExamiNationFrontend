@@ -16,7 +16,7 @@ const baseUrl = environment.baseUrl;
 
 @Injectable({ providedIn: 'root' })
 export class QuestionsService
-  extends AbstractCrudService<Question>
+  extends AbstractCrudService<Question,QuestionsResponse>
   implements IDeleteService<QuestionsResponse>
 {
   constructor(http: HttpClient) {
@@ -24,7 +24,7 @@ export class QuestionsService
   }
 
   delete(id: string): Observable<QuestionsResponse> {
-    return this.http.delete<QuestionsResponse>(`${this.baseUrl}/Question/${id}`);
+    return this.http.delete<QuestionsResponse>(`${this.baseUrl}/${id}`);
   }
   getQuetionsPage(option: QueryOptions): Observable<QuestionsResponse> {
     const {

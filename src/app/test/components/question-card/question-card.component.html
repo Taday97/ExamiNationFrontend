@@ -15,7 +15,7 @@
           }">
           <div class="mr-3 mt-1">
             <input type="radio" [value]="option.id" name="q1" class="form-radio text-blue-600"
-              (click)="onOptionSelect(option.id)" [checked]="selectedOption() === option.id" />
+              (click)="onOptionSelect(option.id!)" [checked]="selectedOption() === option.id" />
           </div>
           <span class="text-gray-800">{{ option.text }}</span>
         </label>

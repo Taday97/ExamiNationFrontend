@@ -13,7 +13,7 @@ import {
 } from '@test/interfaces/test-result.interface';
 import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IDeleteService } from './interfaces/delete-service.interface';
+import { IDeleteService } from '../../shared/services/interfaces/delete-service.interface';
 const baseUrl = environment.baseUrl;
 
 @Injectable({ providedIn: 'root' })

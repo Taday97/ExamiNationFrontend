@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TestCardComponent } from '@test/components/test-card/test-card.component';
-import { TestsService } from '@shared/services/tests.service';
+import { TestsService } from '@admin-dashboard/services/tests.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({

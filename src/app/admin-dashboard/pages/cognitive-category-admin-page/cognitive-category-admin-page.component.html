@@ -17,7 +17,7 @@
       </p-button>
     </div>
 
-    <app-test-admin-modal (refreshTrigger)="onRefresh()" />
+    <app-cognitive-category-admin-modal (refreshTrigger)="onRefresh()" />
 
     <p-table #dt [value]="categoriesResource.value()!" [paginator]="true" [rows]="pageSize()"
       [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadTestsLazy($event)"
@@ -129,7 +129,7 @@
 
     <p-toast />
 
-    <app-delete-confirm-dialog [entityName]="'Test'" [deleteService]="cognitiveCategoryService"
+    <app-delete-confirm-dialog [entityName]="'Cognitive Category'" [deleteService]="cognitiveCategoryService"
       (completed)="onRefresh()" (cancel)="cancelDeleteModal()"></app-delete-confirm-dialog>
   </div>
 </div>

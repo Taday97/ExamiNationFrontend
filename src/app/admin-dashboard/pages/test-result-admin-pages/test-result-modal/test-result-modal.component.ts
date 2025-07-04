@@ -12,7 +12,7 @@ import { catchError, firstValueFrom, map, of, single } from 'rxjs';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
-import { TestResultService } from '@shared/services/testResult.service';
+import { TestResultService } from '@admin-dashboard/services/testResult.service';
 import { DataViewModule } from 'primeng/dataview';
 import {
   TestResultStatus,
@@ -20,10 +20,10 @@ import {
 } from '@test/interfaces/test-result.interface';
 import { CamelCaseToSpacesPipe } from '../../../../shared/pipes/camelCaseToSpaces.pipe';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { QuestionsService } from '@shared/services/questions.service';
 import { AnswerListComponent } from '../answer-list/answer-list.component';
 import { TestResultHistory } from '../../../../test/interfaces/test-result.interface';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
+import { QuestionsService } from '@shared/services/questions.service';
 
 @Component({
   selector: 'app-test-result-modal',

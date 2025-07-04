@@ -32,6 +32,8 @@ import { NotificationService } from '@shared/services/notification.service';
 import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/test-admin-modal.component';
+import { CognitiveCategoryAdminModalComponent } from "./cognitive-category-admin-modal/cognitive-category-admin-modal.component";
+import { CognitiveCategory } from '@shared/interfaces/cognitve-category';
 
 @Component({
   selector: 'app-cognitive-category-admin-page',
@@ -64,16 +66,16 @@ import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/tes
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    TestAdminModalComponent,
-  ],
+    CognitiveCategoryAdminModalComponent
+],
   templateUrl: './cognitive-category-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
 export class CognitiveCategoryAdminPageComponent {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(TestAdminModalComponent)
-  modal!: TestAdminModalComponent;
+  @ViewChild(CognitiveCategoryAdminModalComponent)
+  modal!: CognitiveCategoryAdminModalComponent;
 
   loading = signal(false);
   totalRecords = 0;
@@ -164,8 +166,8 @@ export class CognitiveCategoryAdminPageComponent {
     this.refreshTrigger.update((prev) => !prev);
   }
 
-  openEditModal(test?: Test) {
-    this.modal.openModal(test);
+  openEditModal(cognitiveCategory?: CognitiveCategory) {
+    this.modal.openModal(cognitiveCategory);
   }
 
   openDeleteModal(id: string) {

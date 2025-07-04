@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { catchError, map, of } from 'rxjs';
-import { TestsService } from '@shared/services/tests.service';
+import { TestsService } from '@admin-dashboard/services/tests.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { Test, TestType } from '@shared/interfaces/test.interface';

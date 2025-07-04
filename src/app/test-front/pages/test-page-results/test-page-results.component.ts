@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TestResultService } from '@shared/services/testResult.service';
+import { TestResultService } from '@admin-dashboard/services/testResult.service';
 import { map } from 'rxjs';
 import { PerformanceCardCategoryComponent } from "../../components/performance-card-category/performance-card-category.component";
 

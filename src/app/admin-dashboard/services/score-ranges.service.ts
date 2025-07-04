@@ -4,25 +4,33 @@ import { PagesResponse } from '@test/interfaces/pages-response.interface';
 import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IDeleteService } from '../../shared/services/interfaces/delete-service.interface';
-import { CognitiveCategory, CognitiveCategoryResponse } from '@shared/interfaces/cognitve-category';
 import { ApiResponse } from '@test/interfaces/api-response.interface';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ScoreRange, ScoreRangesResponse } from '@shared/interfaces/score-ranges';
-
-const baseUrl = environment.baseUrl;
+import {
+  ScoreRange,
+  ScoreRanges,
+  ScoreRangesResponse,
+} from '@shared/interfaces/score-ranges';
+import { AbstractCrudService } from '@shared/services/abstract-crud.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ScoreRangesService implements IDeleteService<ApiResponse<ScoreRange>> {
-  constructor() {}
-  private http = inject(HttpClient);
-
-  delete(id: string): Observable<ApiResponse<ScoreRange>> {
-    return this.http.delete<ApiResponse<ScoreRange>>(`${baseUrl}/scoreRange/${id}`);
+export class ScoreRangesService
+  extends AbstractCrudService<ScoreRange,ScoreRangesResponse>
+  implements IDeleteService<ApiResponse<ScoreRangesResponse>>
+{
+  constructor(http: HttpClient) {
+    super(http, `${environment.baseUrl}/ScoreRange`);
   }
-  getPage(option: QueryOptions): Observable<PagesResponse<ScoreRangesResponse>> {
+
+  delete(id: string): Observable<ApiResponse<ScoreRangesResponse>> {
+    return this.http.delete<ApiResponse<ScoreRangesResponse>>(
+      `${this.baseUrl}/${id}`
+    );
+  }
+  getPage(option: QueryOptions): Observable<PagesResponse<ScoreRanges>> {
     const {
       filters = {},
       sortBy = '',
@@ -44,9 +52,12 @@ export class ScoreRangesService implements IDeleteService<ApiResponse<ScoreRange
       }
     }
     return this.http
-      .get<PagesResponse<ScoreRangesResponse>>(`${baseUrl}/scoreRange/pages`, {
+      .get<PagesResponse<ScoreRanges>>(`${this.baseUrl}/pages`, {
         params,
       })
       .pipe(tap((resp) => console.log('page' + resp.data.filters)));
+  }
+  getNextMinScore(testId: string): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/test/${testId}/next-minScore`);
   }
 }

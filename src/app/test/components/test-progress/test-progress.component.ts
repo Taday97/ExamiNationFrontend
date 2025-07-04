@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { QuestionsService } from '@shared/services/questions.service';
-import { TestResultService } from '@shared/services/testResult.service';
+import { TestResultService } from '@admin-dashboard/services/testResult.service';
 import { map } from 'rxjs';
 
 @Component({

@@ -1,0 +1,102 @@
+<p-dialog [(visible)]="dialog" [style]="{ width: '40rem' }" header="Create Score Range" [modal]="true" [closable]="true"
+  (onHide)="resetForm()">
+  <form [formGroup]="scoreRangeForm" class="p-0" (ngSubmit)="onSubmit()">
+    <div *ngIf="globalError()" class="text-red-600 mb-3">
+      {{ globalError() }}
+    </div>
+    <input type="hidden" formControlName="id" />
+
+    <div class="mb-3">
+      <label for="testId" class="block text-sm font-medium text-gray-700">
+        Test <span class="text-red-500">*</span>
+      </label>
+      <p-dropdown appendTo="body" formControlName="testId" [options]="tests()?.data" (onChange)="onTestSelected($event.value)"
+        placeholder="Select test" optionLabel="name" optionValue="id" inputId="testId"
+        class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary"></p-dropdown>
+      <form-error-label [control]="scoreRangeForm.get('testId')!" />
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-3">
+      <div>
+        <label for="minScore" class="block text-sm font-medium text-gray-700">
+          Minimum Score <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="minScore" id="minScore"
+          class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
+          placeholder="0" />
+        <form-error-label [control]="scoreRangeForm.get('minScore')!" />
+        <span *ngIf="scoreRangeForm.errors && scoreRangeForm.errors['minLessThanOrEqualMax']"
+          class="text-red-500 text-xs">{{ scoreRangeForm.errors['minLessThanOrEqualMax'] }}</span>
+      </div>
+      <div>
+        <label for="maxScore" class="block text-sm font-medium text-gray-700">
+          Maximum Score <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="maxScore" id="maxScore"
+          class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
+          placeholder="0" />
+        <form-error-label [control]="scoreRangeForm.get('maxScore')!" />
+      </div>
+      <form-error-label [control]="scoreRangeForm.get('maxScore')!" />
+
+
+    </div>
+
+    <div class="mb-3">
+      <label for="classification" class="block text-sm font-medium text-gray-700">
+        Classification <span class="text-red-500">*</span>
+      </label>
+      <input type="text" formControlName="classification" id="classification"
+        class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
+        placeholder="Ex: High Level, Medium Level, etc." />
+      <form-error-label [control]="scoreRangeForm.get('classification')!" />
+    </div>
+
+    <div class="mb-3">
+      <label for="shortDescription" class="block text-sm font-medium text-gray-700">
+        Short Description <span class="text-red-500">*</span>
+      </label>
+      <input type="text" formControlName="shortDescription" id="shortDescription"
+        class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
+        placeholder="Brief description of the range." />
+      <form-error-label [control]="scoreRangeForm.get('shortDescription')!" />
+    </div>
+
+    <div class="mb-3">
+      <label for="detailedExplanation" class="block text-sm font-medium text-gray-700">
+        Detailed Explanation <span class="text-red-500">*</span>
+      </label>
+      <textarea formControlName="detailedExplanation" id="detailedExplanation" rows="3"
+        class="mt-1 w-full px-3 py-2 border rounded-md hover:border-gray-400"
+        placeholder="Detailed explanation of what the score range means"></textarea>
+      <form-error-label [control]="scoreRangeForm.get('detailedExplanation')!" />
+    </div>
+
+    <div class="mb-3">
+      <label for="recommendations" class="block text-sm font-medium text-gray-700">
+        Recommendations<span class="text-red-500">*</span>
+      </label>
+      <textarea formControlName="recommendations" id="recommendations" rows="3"
+        class="mt-1 w-full px-3 py-2 border rounded-md hover:border-gray-400"
+        placeholder="Recommendations for users in this score range"></textarea>
+      <form-error-label [control]="scoreRangeForm.get('recommendations')!" />
+    </div>
+
+    <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+      <button type="button" (click)="closeModal()"
+        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Cancelar
+      </button>
+      <button type="submit"
+        class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+        <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m15.3 5.3l-6.8 6.8l-2.8-2.8l-1.4 1.4l4.2 4.2l8.2-8.2z" />
+        </svg>
+        Guardar
+      </button>
+    </div>
+  </form>
+</p-dialog>

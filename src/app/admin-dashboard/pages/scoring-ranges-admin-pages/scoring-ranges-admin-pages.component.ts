@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { computed, inject, signal, ViewChild } from '@angular/core';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TableModule } from 'primeng/table';
@@ -8,7 +8,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { catchError, map, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Test, TestType } from '@shared/interfaces/test.interface';
+import {
+  Test,
+  TestsResponse,
+  TestType,
+} from '@shared/interfaces/test.interface';
 
 import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -32,7 +36,10 @@ import { NotificationService } from '@shared/services/notification.service';
 import { ScoreRangesService } from '@admin-dashboard/services/score-ranges.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
-import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/test-admin-modal.component';
+import { QuestionAdminModalComponent } from '../question-admin-page/question-admin-modal/question-admin-modal.component';
+import { ScoringRangeAdminModalComponent } from './scoring-range-admin-modal/scoring-range-admin-modal.component';
+import { ScoreRange } from '@shared/interfaces/score-ranges';
+import { TestsService } from '@admin-dashboard/services/tests.service';
 
 @Component({
   selector: 'app-scoring-ranges-admin-pages',
@@ -65,16 +72,16 @@ import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/tes
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    TestAdminModalComponent
-],
+    ScoringRangeAdminModalComponent,
+  ],
   templateUrl: './scoring-ranges-admin-pages.component.html',
   providers: [MessageService, NotificationService],
 })
-export class ScoringRangesAdminPagesComponent {
+export class ScoringRangesAdminPagesComponent implements OnInit {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(TestAdminModalComponent)
-  modal!: TestAdminModalComponent;
+  @ViewChild(ScoringRangeAdminModalComponent)
+  modal!: ScoringRangeAdminModalComponent;
 
   loading = signal(false);
   totalRecords = 0;
@@ -95,9 +102,14 @@ export class ScoringRangesAdminPagesComponent {
   refreshTrigger = signal(false);
 
   testUiService = inject(TestUiService);
+  testsService = inject(TestsService);
   scoreRangesService = inject(ScoreRangesService);
+  tests = signal<TestsResponse | null>(null);
 
-  categoriesResource = rxResource({
+  ngOnInit() {
+    this.testsService.getAll().subscribe((t) => this.tests.set(t));
+  }
+  scoringrangesResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
       sortBy: this.sortField(),
@@ -131,7 +143,7 @@ export class ScoringRangesAdminPagesComponent {
     },
   });
 
-  loadTestsLazy(event: any) {
+  loadScoringRangesLazy(event: any) {
     this.pageNumber.set(event.first / event.rows + 1);
     this.sortField.set(event.sortField || 'name');
     this.sortDescending.set(event.sortOrder !== 1);
@@ -167,8 +179,8 @@ export class ScoringRangesAdminPagesComponent {
     this.refreshTrigger.update((prev) => !prev);
   }
 
-  openEditModal(test?: Test) {
-    this.modal.openModal(test);
+  openEditModal(scoreRange?: ScoreRange) {
+    this.modal.openModal(scoreRange);
   }
 
   openDeleteModal(id: string) {

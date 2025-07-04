@@ -1,8 +1,11 @@
 <p-dialog [(visible)]="dialog" [style]="{ width: '40rem' }" header="Create Question" [modal]="true" [closable]="true"
   (onHide)="resetForm()">
   <form [formGroup]="questionForm" class="p-0" (ngSubmit)="onSubmit()">
-
+    <div *ngIf="globalError()" class="text-red-600 mb-3">
+      {{ globalError() }}
+    </div>
     <input type="hidden" formControlName="id" />
+
     <!-- Texto de la pregunta -->
     <div class="mb-4">
       <label for="test-name" class="block text-sm font-medium text-gray-700">
@@ -19,7 +22,7 @@
         <label for="test-name" class="block text-sm font-medium text-gray-700">
           Type Question <span class="text-red-500">*</span>
         </label>
-        <p-dropdown
+        <p-dropdown appendTo="body"
           class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary ng-pristine ng-valid ng-touched"
           formControlName="type" [options]="questionsTypes" placeholder="Select Question Type" optionLabel="label"
           (onChange)="onQuestionTypeSelected($event.value)" optionValue="value" inputId="type"></p-dropdown>
@@ -30,7 +33,7 @@
         <label for="test-name" class="block text-sm font-medium text-gray-700">
           Test <span class="text-red-500">*</span>
         </label>
-        <p-dropdown
+        <p-dropdown appendTo="body"
           class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary ng-pristine ng-valid ng-touched"
           formControlName="testId" [options]="tests()?.data" placeholder="Select test" optionLabel="name"
           optionValue="id" inputId="testId" (onChange)="onTestSelected($event.value)"></p-dropdown>
@@ -45,10 +48,11 @@
         <label for="test-name" class="block text-sm font-medium text-gray-700">
           Cognitive Category
         </label>
-        <p-dropdown
+        <p-dropdown appendTo="body"
           class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary ng-pristine ng-valid ng-touched"
-          formControlName="cognitiveCategoryId" [options]="cognitiveCategories()?.data" placeholder="Select cognitive category"
-          optionLabel="name" optionValue="id" inputId="cognitiveCategoryId"></p-dropdown>
+          formControlName="cognitiveCategoryId" [options]="cognitiveCategories()?.data"
+          placeholder="Select cognitive category" optionLabel="name" optionValue="id"
+          inputId="cognitiveCategoryId"></p-dropdown>
         <form-error-label [control]="questionForm.get('cognitiveCategoryId')!" />
       </div>
 
@@ -74,10 +78,12 @@
       </div>
     </div>
 
+
     <div class="mb-4" formArrayName="options">
+
       <div class="flex justify-between items-center mb-3">
         <label class="block text-sm font-medium text-gray-700">Options</label>
-        <button type="button" (click)="addOption()" class="text-sm text-primary flex items-center">
+        <button *ngIf="!isTrueFalse" type="button" (click)="addOption()" class="text-sm text-primary flex items-center">
           <i class="ri-add-line mr-1"></i> Add option
         </button>
       </div>
@@ -85,12 +91,19 @@
       <div *ngFor="let opt of options.controls; let i = index" [formGroupName]="i"
         class="flex items-center space-x-3 mt-2 px-3 py-0 rounded-md border mb-2 hover:border-gray-400">
 
-        <input type="checkbox" [checked]="opt.value.isCorrect"  (change)="toggleOption(i, $event)"/>
+        <input type="checkbox" formControlName="isCorrect" (change)="toggleOption(i, $event)" />
+
 
         <input type="text" formControlName="text" (blur)="onOptionBlur(i)" placeholder="Write an option"
           class="flex-1 border-none outline-none focus:ring-0 text-base py-2" />
 
-        <button type="button" (click)="removeOption(i)"
+        <div *ngIf="opt.get('text')?.touched && opt.get('text')?.invalid" class="text-red-500 text-sm mt-1">
+          <div *ngIf="opt.get('text')?.errors?.['required']">
+            Option text is required.
+          </div>
+        </div>
+
+        <button *ngIf="!isTrueFalse" type="button" (click)="removeOption(i)"
           class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-500 rounded hover:bg-red-100">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
             <path fill="currentColor"
@@ -98,6 +111,9 @@
             </path>
           </svg>
         </button>
+      </div>
+      <div *ngIf="options.errors?.['noCorrectOptionSelected'] && options.touched" class="text-red-500 text-sm mt-1">
+        You must select at least one correct option.
       </div>
     </div>
 

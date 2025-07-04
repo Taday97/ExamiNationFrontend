@@ -12,7 +12,7 @@ import { FormUtils } from 'src/app/utils/form-utils';
 import { FormErrorLabelComponent } from '@shared/components/form-error-label/form-error-label.component';
 import { TestType } from '@shared/interfaces/test.interface';
 import { firstValueFrom } from 'rxjs';
-import { TestsService } from '@shared/services/tests.service';
+import { TestsService } from '@admin-dashboard/services/tests.service';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { handle } from 'src/app/utils/handle.helper';

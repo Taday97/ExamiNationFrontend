@@ -3,7 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth/services/auth.service';
 import { HistoryCardComponent } from '@test/components/history-card/history-card.component';
-import { TestResultService } from '@shared/services/testResult.service';
+import { TestResultService } from '@admin-dashboard/services/testResult.service';
 import { map } from 'rxjs';
 import testFrontRoutes from '../../test.front.routes';
 
