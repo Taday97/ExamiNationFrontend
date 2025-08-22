@@ -19,15 +19,15 @@ import { FormErrorLabelComponent } from '@shared/components/form-error-label/for
 import { firstValueFrom } from 'rxjs';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
-import { handle } from 'src/app/utils/handle.helper';
 import { TestsResponse, TestType } from '@shared/interfaces/test.interface';
 import { DropdownModule } from 'primeng/dropdown';
 import { OptionData } from '@shared/interfaces/option.interface';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { minLessThanOrEqualMaxValidator } from 'src/app/utils/validators/minLessThanOrEqualMaxValidator';
 import { CognitiveCategory } from '@shared/interfaces/cognitve-category';
 import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { enumToOptions } from 'src/app/utils/enum-utils';
+import { FormErrorService } from '@shared/services/form-error.service';
+import { submitForm } from 'src/app/utils/submit-form.helper';
 
 @Component({
   selector: 'app-cognitive-category-admin-modal',
@@ -62,6 +62,7 @@ export class CognitiveCategoryAdminModalComponent implements OnInit {
   // Servicios inyectados
   private fb = inject(FormBuilder);
   cognitiveCategoryService = inject(CognitiveCategoryService);
+  formErrorService = inject(FormErrorService);
   private notificationService = inject(NotificationService);
 
   // Eventos
@@ -85,7 +86,7 @@ export class CognitiveCategoryAdminModalComponent implements OnInit {
   // Formulario
   cognitiveCategoryForm = this.fb.group({
     id: [''],
-    testTypeId: [0, [Validators.required, Validators.min(1)]],
+    testTypeId: [0, [Validators.required, Validators.min(0)]],
     name: ['', [Validators.required, Validators.maxLength(100)]],
     code: ['', [Validators.required, Validators.maxLength(50)]],
     description: ['', [Validators.maxLength(250)]],
@@ -131,74 +132,32 @@ export class CognitiveCategoryAdminModalComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.cognitiveCategoryForm.markAllAsTouched();
-    console.log('valida');
-    if (!this.cognitiveCategoryForm.valid) return;
-
     const formValue = this.cognitiveCategoryForm.value;
-    const CognitiveCategoryLike: Partial<CognitiveCategory> = {
-      ...(formValue as any),
-    };
+    const valueLike: Partial<CognitiveCategory> = { ...(formValue as any) };
+    const current = this.cognitiveCategory();
+    const isNew = !current || current.id === 'new';
 
-    const currentCognitiveCategory = this.cognitiveCategory();
-    const isNew =
-      !currentCognitiveCategory || currentCognitiveCategory.id === 'new';
+    const task = () =>
+      isNew
+        ? firstValueFrom(this.cognitiveCategoryService.create(valueLike))
+        : firstValueFrom(
+            this.cognitiveCategoryService.update(current!.id, valueLike)
+          );
 
-    const task = () => {
-      if (isNew) {
-        return firstValueFrom(
-          this.cognitiveCategoryService.create(CognitiveCategoryLike)
-        );
-      } else {
-        return firstValueFrom(
-          this.cognitiveCategoryService.update(
-            currentCognitiveCategory!.id,
-            CognitiveCategoryLike
-          )
-        );
-      }
-    };
-
-    const response = await handle(
+    const result = await submitForm(
+      this.cognitiveCategoryForm,
       task,
-      'Score Range saved successfully',
       this.notificationService,
-      'Failed to save Score Range',
-      { suppressNotifications: true }
+      'Cognitive Category saved successfully',
+      'Failed to save Cognitive Category',
+      this.formErrorService,
+      (msg) => this.globalError.set(msg)
     );
 
-    if (response?.result) {
-      this.notificationService.success('CognitiveCategory saved successfully');
+    if (result) {
       this.closeModal();
       this.resetForm();
       this.refreshTrigger.emit(true);
-    } else if (response?.validationErrors) {
-      this.setBackendErrors(response.validationErrors);
-    } else if (response?.message) {
-      this.globalError.set(response.message);
-    } else {
-      this.notificationService.error('Failed to save CognitiveCategory');
     }
   }
-
- setBackendErrors(errors?: { [key: string]: string[] }) {
-  errors = errors ?? {};
-  this.globalError.set('');
-  Object.keys(this.cognitiveCategoryForm.controls).forEach(key => {
-    const control = this.cognitiveCategoryForm.get(key);
-    if (control?.hasError('backend')) {
-      control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-      control.setErrors(null);
-    }
-  });
-
-  Object.entries(errors).forEach(([fieldName, messages]) => {
-    const control = this.cognitiveCategoryForm.get(fieldName);
-    if (control) {
-      control.setErrors({ backend: messages.join(', ') });
-    } else {
-      this.globalError.set((this.globalError() + '\n' + messages.join(', ')).trim());
-    }
-  });
-}
 }

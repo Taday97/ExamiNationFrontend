@@ -3,10 +3,11 @@
   <div class="p-6 bg-white overflow-hidden shadow rounded-lg w-full h-full overflow-x-auto">
     <div class="flex justify-between items-center mb-6">
       <div>
-        <h1 class="text-2xl font-semibold text-gray-800">Tests</h1>
-        <p class="text-sm text-gray-500">Manage the tests available on the platform.</p>
+        <h1 class="text-2xl font-semibold text-gray-800">Roles</h1>
+        <p class="text-sm text-gray-500">Manage roles, view their descriptions, and see how many users are assigned to
+          each role.</p>
       </div>
-      <p-button (onClick)="openEditModal()" label="New Test">
+      <p-button (onClick)="openEditModal()" label="New Role">
         <ng-template pTemplate="icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="text-white">
             <path fill="currentColor"
@@ -17,10 +18,10 @@
       </p-button>
     </div>
 
-    <app-test-admin-modal (refreshTrigger)="onRefresh()" />
+    <app-rol-admin-modal (refreshTrigger)="onRefresh()" [tests]="tests()!" />
 
-    <p-table #dt [value]="testsResource.value()!" [paginator]="true" [rows]="pageSize()" [totalRecords]="totalRecords"
-      [lazy]="true" (onLazyLoad)="loadTestsLazy($event)" (onFilter)="onTableFilter($event)" [loading]="loading()"
+    <p-table #dt [value]="rolesResource.value()!" [paginator]="true" [rows]="pageSize()" [totalRecords]="totalRecords"
+      [lazy]="true" (onLazyLoad)="loadRolesLazy($event)" (onFilter)="onTableFilter($event)" [loading]="loading()"
       [sortField]="sortField()" [sortOrder]="sortDescending() ? -1 : 1">
 
       <!-- HEADER -->
@@ -38,13 +39,6 @@
                 [matchMode]="colum.filterType === 'dropdown' ? 'equals' : (colum.filterType === 'date' ? 'equals' : 'contains')"
                 [type]="colum.filterType">
 
-
-                <ng-template pTemplate="filter" let-value let-filter="filterCallback"
-                  *ngIf="colum.filterType === 'dropdown'">
-                  <p-dropdown [options]="colum.options" [filter]="true" optionLabel="label" [showClear]="true"
-                    [ngModel]="value" (onChange)="filter($event.value)" placeholder="Select One" class="w-full">
-                  </p-dropdown>
-                </ng-template>
               </p-columnFilter>
 
             </div>
@@ -58,69 +52,27 @@
       </ng-template>
 
       <!-- BODY -->
-      <ng-template pTemplate="body" let-test>
-        <tr class="table-row cursor-pointer">
+      <ng-template pTemplate="body" let-rol let-i="rowIndex">
+        <tr class="table-row cursor-pointer transition-all duration-300 hover:bg-gray-50 border-b border-gray-200">
 
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="">
-                <img [src]="test.imageUrl | testImage" [alt]="test.name" class="w-24 rounded">
-              </div>
-              <div class="ml-4">
-                <div class="text-sm text-gray-900">{{ test.name }}</div>
-              </div>
-            </div>
+            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+              [ngClass]="['bg-' + rol.randomColor + '-100', 'text-' + rol.randomColor + '-800']">{{rol.name}}</span>
           </td>
-          <td class="px-6 py-4 align-top">
-            <div class="text-sm text-gray-900 break-words max-w-xs whitespace-normal text-start">
-              {{test.description}}
-            </div>
-          </td>
+          <td class="px-6 py-4 whitespace-nowrap">{{rol.description}} </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-              <div class="w-8 h-8 flex items-center justify-center rounded-full mr-3" [ngClass]="['bg-' +  test.testTypeData?.color + '-100', 'text-' +
-             test.testTypeData?.color + '-600']" [innerHTML]=" test.testTypeData?.svg">
-              </div>
-              <span class="font-medium">{{test.typeName}}</span>
-            </div>
+            @if (rol.userCount) {
+              <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-Fblue-800">
+                {{rol.userCount}}
+              </span>
+            }
           </td>
-
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900">{{test.createdAt | date: 'MMM d, y'}}</div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full cursor-help"
-              [ngClass]="test.isScoringComplete
-      ? 'bg-green-100 text-green-800'
-      : 'bg-red-100 text-red-800'"
-              [title]="test.isScoringComplete ? 'Test scoring is complete and valid.' : 'Invalid: scoring ranges do not cover all possible scores. Please review them.'">
-              <ng-container *ngIf="test.isScoringComplete; else invalidTpl">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Valid
-              </ng-container>
-
-              <ng-template #invalidTpl>
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Invalid
-              </ng-template>
-            </span>
-          </td>
-
-
-
-
           <td class="px-6 py-4 text-right text-sm font-medium">
             <div class="relative inline-block text-left">
               <div class="flex-shrink-0 ml-4 flex space-x-2">
                 <button
                   class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-500 rounded hover:bg-indigo-100"
-                  (click)="openEditModal(test)" aria-label="Editar test">
+                  (click)="openEditModal(rol)" aria-label="Editar test">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                       stroke-width="2">
@@ -137,7 +89,7 @@
                     </g>
                   </svg>
                 </button>
-                <button (click)="openDeleteModal(test.id)"
+                <button (click)="openDeleteModal(rol.id)"
                   class="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-500 rounded hover:bg-red-100"
                   aria-label="Otro botón">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 h-6">
@@ -161,17 +113,20 @@
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M9 17v-2a4 4 0 00-4-4H3m18 4a4 4 0 00-4-4h-2m-2-4a4 4 0 00-8 0m8 0a4 4 0 018 0m-8 0v1m0 4v4m-4 0h8" />
               </svg>
-              <p class="text-lg font-semibold mb-2">No tests found</p>
-              <p class="text-sm">Try adjusting your filters or click "New Test" to get started.</p>
+              <p class="text-lg font-semibold mb-2">No roles found</p>
+              <p class="text-sm">Try adjusting your filters or click "New Role" to get started.</p>
             </div>
           </td>
         </tr>
       </ng-template>
     </p-table>
 
+
     <p-toast />
 
-    <app-delete-confirm-dialog [entityName]="'Test'" [deleteService]="testsService" (completed)="onRefresh()"
+
+    <app-delete-confirm-dialog [entityName]="'Score Range'" [deleteService]="rolesService" (completed)="onRefresh()"
       (cancel)="cancelDeleteModal()"></app-delete-confirm-dialog>
   </div>
+
 </div>

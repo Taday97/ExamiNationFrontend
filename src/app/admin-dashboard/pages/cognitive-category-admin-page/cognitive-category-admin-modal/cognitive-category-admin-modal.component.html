@@ -14,12 +14,13 @@
         <input type="text" formControlName="name" id="name"
           class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400" />
         <form-error-label [control]="cognitiveCategoryForm.get('name')!" />
+
       </div>
       <div>
         <label for="code" class="block text-sm font-medium text-gray-700">
           Code <span class="text-red-500">*</span>
         </label>
-        <input type="text" formControlName="code" id="code"
+        <input type="text" formControlName="code" id="code" (keydown.space)="$event.preventDefault()"
           class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400 uppercase" />
         <form-error-label [control]="cognitiveCategoryForm.get('code')!" />
       </div>

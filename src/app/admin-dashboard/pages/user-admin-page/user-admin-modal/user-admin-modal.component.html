@@ -1,0 +1,71 @@
+<p-dialog [(visible)]="dialog" [style]="{ width: '40rem' }" [header]="isNew ? 'Create User' : 'Edit User'"  [modal]="true" [closable]="true"
+  (onHide)="resetForm()">
+  <form [formGroup]="userForm" class="p-0" (ngSubmit)="onSubmit()">
+    <div *ngIf="globalError()" class="text-red-600 mb-3">
+      {{ globalError() }}
+    </div>
+    <input type="hidden" formControlName="id" />
+
+    <div>
+      <label for="signup-username" class="block text-sm font-medium text-gray-700">Username <span
+          class="text-red-500">*</span></label>
+      <div class="mt-1">
+        <input id="signup-email" name="userName" type="userName" autocomplete="userName" required
+          class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+          placeholder="Enter your username" formControlName="userName" required />
+        <form-error-label [control]="userForm.get('userName')!" />
+      </div>
+    </div>
+    <div>
+      <label for="signup-email" class="block text-sm font-medium text-gray-700">Email address <span
+          class="text-red-500">*</span></label>
+      <div class="mt-1">
+        <input id="signup-email" name="email" type="email" autocomplete="email" required
+          class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+          placeholder="Enter your email" formControlName="email" required />
+        <form-error-label [control]="userForm.get('email')!" />
+      </div>
+    </div>
+
+    <div>
+      <label for="signup-password" class="block text-sm font-medium text-gray-700">Password
+         <span *ngIf="isNew" class="text-red-500">*</span></label>
+      <div class="mt-1">
+        <input id="signup-password" name="password" type="password" autocomplete="new-password" required
+          class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
+          placeholder="Create a password" formControlName="password" required />
+        <form-error-label [control]="userForm.get('password')!" />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="id" class="block text-sm font-medium text-gray-700">
+        Roles <span class="text-red-500">*</span>
+      </label>
+      <p-multiSelect [options]="roleOptions" optionLabel="label" optionValue="value" formControlName="roles"
+        placeholder="Select Roles" inputId="roles" appendTo="body"
+        class="mt-1 block w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-primary focus:ring-primary">
+      </p-multiSelect>
+
+
+      <form-error-label [control]="userForm.get('roles')!" />
+    </div>
+
+    <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+      <button type="button" (click)="closeModal()"
+        class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
+        <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Cancelar
+      </button>
+      <button type="submit"
+        class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+        <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="m15.3 5.3l-6.8 6.8l-2.8-2.8l-1.4 1.4l4.2 4.2l8.2-8.2z" />
+        </svg>
+        Guardar
+      </button>
+    </div>
+  </form>
+</p-dialog>

@@ -31,19 +31,18 @@ import { FormErrorService } from '@shared/services/form-error.service';
 import { submitForm } from 'src/app/utils/submit-form.helper';
 
 @Component({
-  selector: 'app-scoring-range-admin-modal',
+  selector: 'app-rol-admin-modal',
   imports: [
     DialogModule,
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
     DropdownModule,
-    FormErrorLabelComponent,
     AutoCompleteModule,
   ],
-  templateUrl: './scoring-range-admin-modal.component.html',
+  templateUrl: './rol-admin-modal.component.html',
 })
-export class ScoringRangeAdminModalComponent implements OnInit {
+export class RolAdminModalComponent implements OnInit {
   // Inputs
   tests = input<TestsResponse>();
 
@@ -144,8 +143,8 @@ export class ScoringRangeAdminModalComponent implements OnInit {
       this.scoreRangeForm,
       task,
       this.notificationService,
-      'Score Range saved successfully',
-      'Failed to save Score Range',
+      'Rol saved successfully',
+      'Failed to save Rol',
       this.formErrorService,
       (msg) => this.globalError.set(msg)
     );

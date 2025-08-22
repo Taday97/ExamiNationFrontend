@@ -23,36 +23,41 @@ export class FormUtils {
   static getTextError(errors: ValidationErrors) {
     for (const key of Object.keys(errors)) {
       switch (key) {
+        case 'minLessThanOrEqualMax':
+          return errors['minLessThanOrEqualMax'];
+        case 'backend':
+          return errors['backend'];
+
         case 'required':
-          return 'Este campo es requerido';
+          return 'This field is required.';
 
         case 'minlength':
-          return `Mínimo de ${errors['minlength'].requiredLength} caracteres.`;
+          return `Minimum of ${errors['minlength'].requiredLength} characters.`;
 
         case 'min':
-          return `Valor mínimo de ${errors['min'].min}`;
+          return `Minimum value is ${errors['min'].min}.`;
 
         case 'email':
-          return `El valor ingresado no es un correo electrónico`;
+          return `The entered value is not a valid email address.`;
 
         case 'emailTaken':
-          return `El correo electrónico ya está siendo usado por otro usuario`;
+          return `This email is already in use by another user.`;
 
         case 'noStrider':
-          return `No se puede usar el username de strider en la app`;
+          return `You cannot use the username 'strider' in the app.`;
 
         case 'invalidImageFormat':
-          return 'El archivo debe ser una imagen válida (jpg, jpeg, png, gif).';
+          return 'The file must be a valid image (jpg, jpeg, png, gif).';
 
         case 'pattern':
           if (errors['pattern'].requiredPattern === FormUtils.emailPattern) {
-            return 'El valor ingresado no luce como un correo electrónico';
+            return 'The entered value does not look like a valid email address.';
           }
 
-          return 'Error de patrón contra expresión regular';
+          return 'Pattern does not match the required format.';
 
         default:
-          return `Error de validación no controlado ${key}`;
+          return `Unhandled validation error: ${key}`;
       }
     }
 
@@ -67,7 +72,7 @@ export class FormUtils {
       ? null
       : { invalidImageFormat: true };
   }
-  
+
   static isValidField(form: FormGroup, fieldName: string): boolean | null {
     return (
       !!form.controls[fieldName].errors && form.controls[fieldName].touched
@@ -111,9 +116,9 @@ export class FormUtils {
   static async checkingServerResponse(
     control: AbstractControl
   ): Promise<ValidationErrors | null> {
-    console.log('Validando contra servidor');
+    console.log('Validating against server...');
 
-    await sleep(); // 2 segundos y medio
+    await sleep(); // 2.5 seconds
 
     const formValue = control.value;
 

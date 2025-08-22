@@ -56,14 +56,14 @@ export class TestResultService implements IDeleteService<TestResultResponse> {
       sortBy = '',
       sortDescending = false,
       pageNumber = 1,
-      pageSize = 10,
+      pageSize,
     } = option;
 
     const params: { [key: string]: string } = {
       SortBy: sortBy,
       SortDescending: String(sortDescending),
       PageNumber: String(pageNumber),
-      PageSize: String(pageSize),
+      ...(pageSize != null && { PageSize: String(pageSize) }),
     };
 
     for (const key in filters) {

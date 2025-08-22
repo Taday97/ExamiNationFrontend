@@ -32,6 +32,7 @@ import { NotificationService } from '@shared/services/notification.service';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { TestAdminModalComponent } from '@admin-dashboard/pages/test-admin-page/test-admin-modal/test-admin-modal.component';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
+import { enumToOptions } from 'src/app/utils/enum-utils';
 
 @Component({
   selector: 'app-admin-tests-table',
@@ -80,12 +81,18 @@ export class TestAdminPageComponent {
   tests: Test[] = [];
   totalRecords = 0;
   isFiltering = signal(false);
-
+  testTypeOptions = [...enumToOptions(TestType)];
   columns = [
-    { key: 'name', label: 'Test Name' },
-    { key: 'description', label: 'Description' },
-    { key: 'category', label: 'Type' },
-    { key: 'createdAt', label: 'Created Date' },
+    { key: 'name', label: 'Test Name', filterType: 'text' },
+    { key: 'description', label: 'Description', filterType: 'text' },
+    {
+      key: 'type',
+      label: 'Type',
+      filterType: 'dropdown',
+      options: this.testTypeOptions,
+    },
+    { key: 'createdAt', label: 'Created Date', filterType: 'text' },
+    { key: 'isScoringComplete', label: 'Valid', filterType: 'text' },
   ];
   pageSize = signal(10);
   pageNumber = signal(1);
@@ -115,10 +122,10 @@ export class TestAdminPageComponent {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
-          const items = res.data.items.map((item,index) => {
+          const items = res.data.items.map((item, index) => {
             return {
               ...item,
-              typeName:TestType[item.type],
+              typeName: TestType[item.type],
               testTypeData: this.testUiService.getTestTypeData(item.type),
               randomColor: this.testUiService.getRandomColor(index),
             };
@@ -158,11 +165,22 @@ export class TestAdminPageComponent {
 
   onTableFilter(event: any): void {
     const filters = event?.filters || {};
-    this.isFiltering.set(
-      Object.values(filters).some(
-        (f: any) => f?.value?.toString().trim() !== ''
-      )
-    );
+    const activeFilters: { [key: string]: string } = {};
+
+    for (const field in filters) {
+      const filterItem = filters[field][0]?.value;
+
+      if (filterItem !== undefined && filterItem !== null) {
+        const value =
+          typeof filterItem === 'object' && filterItem.value !== undefined
+            ? filterItem.value
+            : filterItem;
+
+        activeFilters[field] = value.toString();
+      }
+    }
+
+    this.filters.set(activeFilters);
   }
 
   onRefresh() {

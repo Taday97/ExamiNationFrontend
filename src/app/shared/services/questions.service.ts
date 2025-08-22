@@ -48,7 +48,7 @@ export class QuestionsService
       }
     }
     return this.http
-      .get<QuestionsResponse>(`${baseUrl}/question/paged-with-question`, {
+      .get<QuestionsResponse>(`${baseUrl}/question/paged-with-test`, {
         params,
       })
       .pipe(tap((resp) => console.log('page' + resp.data.questions.filters)));

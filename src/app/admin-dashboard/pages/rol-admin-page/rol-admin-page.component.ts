@@ -33,17 +33,14 @@ import { CardModule } from 'primeng/card';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
-import { ScoreRangesService } from '@admin-dashboard/services/score-ranges.service';
-import { DomSanitizer } from '@angular/platform-browser';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
-import { QuestionAdminModalComponent } from '../question-admin-page/question-admin-modal/question-admin-modal.component';
-import { ScoringRangeAdminModalComponent } from './scoring-range-admin-modal/scoring-range-admin-modal.component';
 import { ScoreRange } from '@shared/interfaces/score-ranges';
 import { TestsService } from '@admin-dashboard/services/tests.service';
-import { toDropdownOptions } from 'src/app/utils/toDropdownOptions';
+import { RolAdminModalComponent } from './rol-admin-modal/rol-admin-modal.component';
+import { RolesService } from '@admin-dashboard/services/roles.service';
 
 @Component({
-  selector: 'app-scoring-ranges-admin-pages',
+  selector: 'app-rol-admin-page',
   imports: [
     TableModule,
     ButtonModule,
@@ -73,16 +70,16 @@ import { toDropdownOptions } from 'src/app/utils/toDropdownOptions';
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    ScoringRangeAdminModalComponent,
+    RolAdminModalComponent,
   ],
-  templateUrl: './scoring-ranges-admin-pages.component.html',
+  templateUrl: './rol-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
-export class ScoringRangesAdminPagesComponent implements OnInit {
+export class RolAdminPageComponent implements OnInit {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(ScoringRangeAdminModalComponent)
-  modal!: ScoringRangeAdminModalComponent;
+  @ViewChild(RolAdminModalComponent)
+  modal!: RolAdminModalComponent;
 
   loading = signal(false);
   totalRecords = 0;
@@ -97,30 +94,17 @@ export class ScoringRangesAdminPagesComponent implements OnInit {
 
   testUiService = inject(TestUiService);
   testsService = inject(TestsService);
-  scoreRangesService = inject(ScoreRangesService);
+  rolesService = inject(RolesService);
   tests = signal<TestsResponse | null>(null);
   testOptions = signal<{ label: string; value: any }[]>([]);
   columns = [
-    {
-      key: 'testId',
-      label: 'Test',
-      filterType: 'dropdown',
-      options: this.testOptions(),
-    },
-    { key: 'minScore', label: 'Score Range', filterType: 'numeric' },
-    { key: 'classification', label: 'Classification', filterType: 'text' },
-    { key: 'shortDescription', label: 'Short Description', filterType: 'text' },
+    { key: 'id', label: 'Role', filterType: 'text' },
+    { key: 'description', label: 'Description', filterType: 'text' },
+    { key: 'users', label: 'Users', filterType: 'numeric' },
   ];
-  ngOnInit() {
-    this.testsService.getAll().subscribe((t) => {
-      this.tests.set(t);
-      const options = toDropdownOptions(t.data, 'name', 'id');
-      this.testOptions.set(options);
-      this.columns.find((col) => col.key === 'testId')!.options = options;
-    });
-  }
+  ngOnInit() {}
 
-  scoringrangesResource = rxResource({
+  rolesResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
       sortBy: this.sortField(),
@@ -132,14 +116,14 @@ export class ScoringRangesAdminPagesComponent implements OnInit {
     loader: ({ request }) => {
       this.loading.set(true);
       console.log('Filters:', request.filters);
-      return this.scoreRangesService.getPage(request).pipe(
+      return this.rolesService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
+
           const enrichedItems = res.data.items.map((item, index) => ({
             ...item,
-            testTypeData: this.testUiService.getTestTypeData(item.testType),
             randomColor: this.testUiService.getRandomColor(index),
           }));
 
@@ -154,7 +138,7 @@ export class ScoringRangesAdminPagesComponent implements OnInit {
     },
   });
 
-  loadScoringRangesLazy(event: any) {
+  loadRolesLazy(event: any) {
     this.pageNumber.set(event.first / event.rows + 1);
     this.sortField.set(event.sortField || 'name');
     this.sortDescending.set(event.sortOrder !== 1);

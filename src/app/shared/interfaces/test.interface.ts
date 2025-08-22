@@ -49,4 +49,5 @@ export interface Test {
   type: TestType;
   createdAt: Date;
   imageUrl: string;
+  isScoringComplete: boolean;
 }

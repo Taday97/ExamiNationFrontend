@@ -1,47 +1,38 @@
 import { Question } from '@shared/interfaces/question.interface';
 import {
   Component,
-  computed,
-  effect,
   EventEmitter,
   inject,
   input,
   OnInit,
   Output,
-  Signal,
   signal,
-  WritableSignal,
 } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import {
   FormArray,
   FormBuilder,
-  FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { FormUtils } from 'src/app/utils/form-utils';
 import { FormErrorLabelComponent } from '@shared/components/form-error-label/form-error-label.component';
 import { QuestionType } from '@shared/interfaces/question.interface';
 import { firstValueFrom } from 'rxjs';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
-import { handle } from 'src/app/utils/handle.helper';
-import { ImageUrl } from '@shared/interfaces/ImageUrl';
 import { TestsResponse } from '@shared/interfaces/test.interface';
 import { DropdownModule } from 'primeng/dropdown';
-import { OptionResponse } from '@shared/interfaces/option.interface';
-import { OptionData } from '../../../../shared/interfaces/option.interface';
+import { OptionData } from '@shared/interfaces/option.interface';
 import {
   AutoCompleteModule,
-  AutoCompleteSelectEvent,
 } from 'primeng/autocomplete';
 import { enumToOptions } from 'src/app/utils/enum-utils';
 import { atLeastOneCorrectOptionValidator } from 'src/app/utils/validators/atLeastOneCorrectOptionValidator';
 import { QuestionsService } from '@shared/services/questions.service';
 import { CognitiveCategoriesResponse } from '@shared/interfaces/cognitve-category';
+import { FormErrorService } from '@shared/services/form-error.service';
+import { submitForm } from 'src/app/utils/submit-form.helper';
 
 @Component({
   selector: 'app-question-admin-modal',
@@ -72,6 +63,7 @@ export class QuestionAdminModalComponent implements OnInit {
   private fb = inject(FormBuilder);
   questionService = inject(QuestionsService);
   questionsService = inject(QuestionsService);
+  formErrorService=inject(FormErrorService);
   private notificationService = inject(NotificationService);
 
   // Eventos
@@ -177,78 +169,36 @@ export class QuestionAdminModalComponent implements OnInit {
     this.resetForm();
   }
 
-  async onSubmit() {
-    this.questionForm.markAllAsTouched();
-    this.options.controls.forEach((control) => {
-      control.get('text')?.markAsTouched();
-    });
-    if (!this.questionForm.valid) return;
+   async onSubmit() {
+      const formValue = this.questionForm.value;
+      const valueLike: Partial<Question> = { ...(formValue as any) };
+      const current = this.question();
+      const isNew = !current || current.id === 'new';
 
-    const formValue = this.questionForm.value;
-    const questionLike: Partial<Question> = { ...(formValue as any) };
+      const task = () =>
+        isNew
+          ? firstValueFrom(this.questionsService.create(valueLike))
+          : firstValueFrom(
+              this.questionsService.update(current!.id, valueLike)
+            );
 
-    const currentQuestion = this.question();
-    const isNew = !currentQuestion || currentQuestion.id === 'new';
+      console.log("submitForm");
+      const result = await submitForm(
+        this.questionForm,
+        task,
+        this.notificationService,
+        'Question saved successfully',
+        'Failed to save Question',
+        this.formErrorService,
+        (msg) => this.globalError.set(msg)
+      );
 
-    const task = () => {
-      if (isNew) {
-        return firstValueFrom(this.questionsService.create(questionLike));
-      } else {
-        return firstValueFrom(
-          this.questionsService.update(currentQuestion!.id, questionLike)
-        );
+      if (result) {
+        this.closeModal();
+        this.resetForm();
+        this.refreshTrigger.emit(true);
       }
-    };
-
-    const response = await handle(
-      task,
-      'Question saved successfully',
-      this.notificationService,
-      'Failed to save question',
-      { suppressNotifications: true }
-    );
-
-    if (response?.result) {
-      this.notificationService.success('Question saved successfully');
-      this.closeModal();
-      this.resetForm();
-      this.refreshTrigger.emit(true);
-    } else if (response?.validationErrors) {
-      this.setBackendErrors(response.validationErrors);
-    } else if (response?.message) {
-      this.globalError.set(response.message);
-    } else {
-      this.notificationService.error('Failed to save question');
     }
-  }
-
-  setBackendErrors(errors?: { [key: string]: string[] }) {
-    errors = errors ?? {};
-    this.globalError.set('');
-
-    Object.entries(errors).forEach(([fieldName, messages]) => {
-      const control = this.questionForm.get(fieldName);
-      if (control) {
-        control.setErrors({ backend: messages.join(', ') });
-      } else if (fieldName.startsWith('options[')) {
-        const match = fieldName.match(/^options\[(\d+)]\.(\w+)$/);
-        if (match) {
-          const index = +match[1];
-          const subField = match[2];
-          const optionControl = this.options.at(index).get(subField);
-          if (optionControl) {
-            optionControl.setErrors({ backend: messages.join(', ') });
-          }
-        }
-      } else {
-        this.globalError.set(
-          (this.globalError() + '\n' + messages.join(', ')).trim()
-        );
-      }
-    });
-  }
-
-  // Manejo de tipo de pregunta y opciones
 
   onQuestionTypeSelected(typeId: number) {
     if (typeId === null || typeId === undefined) return;

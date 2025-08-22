@@ -8,7 +8,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { catchError, map, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Test, TestType } from '@shared/interfaces/test.interface';
+import {
+  Test,
+  TestsResponse,
+  TestType,
+} from '@shared/interfaces/test.interface';
 
 import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -37,6 +41,9 @@ import {
 } from '@test/interfaces/test-result.interface';
 import { CamelCaseToSpacesPipe } from '../../../shared/pipes/camelCaseToSpaces.pipe';
 import { TestResultModalComponent } from '@admin-dashboard/pages/test-result-admin-pages/test-result-modal/test-result-modal.component';
+import { TestsService } from '@admin-dashboard/services/tests.service';
+import { toDropdownOptions } from 'src/app/utils/toDropdownOptions';
+import { enumToOptions } from 'src/app/utils/enum-utils';
 
 @Component({
   selector: 'app-test-result-admin-pages',
@@ -85,15 +92,42 @@ export class TestResultAdminPagesComponent {
   totalRecords = 0;
   isFiltering = signal(false);
 
-  columns = [
-    { key: 'userEmail', label: 'User' },
-    { key: 'testName', label: 'Test' },
-    { key: 'startedAt', label: 'Start' },
-    { key: 'completedAt', label: 'End' },
-    { key: 'score', label: 'Score' },
-    { key: 'progressPercentage', label: 'Progress' },
-    { key: 'status', label: 'State' },
+  testsService = inject(TestsService);
+  tests = signal<TestsResponse | null>(null);
+  testOptions = signal<{ label: string; value: any }[]>([]);
+  testResultStatus = [
+    { label: 'All', value: '' },
+    ...enumToOptions(TestResultStatus),
   ];
+  columns = [
+    { key: 'userEmail', label: 'User', filterType: 'text' },
+    {
+      key: 'testId',
+      label: 'Test',
+      filterType: 'dropdown',
+      options: this.testOptions(),
+    },
+    { key: 'startedAt', label: 'Start', filterType: 'text' },
+    { key: 'completedAt', label: 'End', filterType: 'text' },
+    { key: 'score', label: 'Score', filterType: 'numeric' },
+    { key: 'progressPercentage', label: 'Progress', filterType: 'text' },
+    {
+      key: 'status',
+      label: 'State',
+      filterType: 'dropdown',
+      options: this.testResultStatus,
+    },
+  ];
+
+  ngOnInit() {
+    this.testsService.getAll().subscribe((t) => {
+      this.tests.set(t);
+      const options = toDropdownOptions(t.data, 'name', 'id');
+      this.testOptions.set(options);
+      this.columns.find((col) => col.key === 'testId')!.options = options;
+    });
+  }
+
   pageSize = signal(10);
   pageNumber = signal(1);
   sortField = signal('userEmail');
@@ -104,7 +138,7 @@ export class TestResultAdminPagesComponent {
   testUiService = inject(TestUiService);
   testResultService = inject(TestResultService);
 
-  categoriesResource = rxResource({
+  testResulsResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
       sortBy: this.sortField(),
@@ -164,11 +198,22 @@ export class TestResultAdminPagesComponent {
 
   onTableFilter(event: any): void {
     const filters = event?.filters || {};
-    this.isFiltering.set(
-      Object.values(filters).some(
-        (f: any) => f?.value?.toString().trim() !== ''
-      )
-    );
+    const activeFilters: { [key: string]: string } = {};
+
+    for (const field in filters) {
+      const filterItem = filters[field][0]?.value;
+
+      if (filterItem !== undefined && filterItem !== null) {
+        const value =
+          typeof filterItem === 'object' && filterItem.value !== undefined
+            ? filterItem.value
+            : filterItem;
+
+        activeFilters[field] = value.toString();
+      }
+    }
+
+    this.filters.set(activeFilters);
   }
 
   onRefresh() {

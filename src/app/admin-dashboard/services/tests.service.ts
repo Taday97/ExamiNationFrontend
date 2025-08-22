@@ -20,12 +20,11 @@ const emptyTest: Test = {
   type: TestType.IQ,
   imageUrl: '',
   createdAt: new Date(),
+  isScoringComplete: false,
 };
 
 @Injectable({ providedIn: 'root' })
-export class TestsService
-  implements IDeleteService<TestsResponse>
-{
+export class TestsService implements IDeleteService<TestsResponse> {
   private http = inject(HttpClient);
 
   getAll(): Observable<TestsResponse> {
@@ -57,19 +56,25 @@ export class TestsService
       sortBy = '',
       sortDescending = false,
       pageNumber = 1,
-      pageSize = 10,
+      pageSize,
     } = option;
 
     const params: { [key: string]: string } = {
       SortBy: sortBy,
       SortDescending: String(sortDescending),
       PageNumber: String(pageNumber),
-      PageSize: String(pageSize),
+      ...(pageSize != null && { PageSize: String(pageSize) }),
     };
 
     for (const key in filters) {
-      if (filters.hasOwnProperty(key)) {
-        params[`filters[${key}]`] = filters[key];
+      let value = filters[key];
+      if (
+        filters.hasOwnProperty(key) &&
+        value !== null &&
+        value !== undefined &&
+        value !== ''
+      ) {
+        params[`filters[${key}]`] = value;
       }
     }
     return this.http

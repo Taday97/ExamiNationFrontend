@@ -7,6 +7,11 @@ import { QuestionAdminPageComponent } from './pages/question-admin-page/question
 import { CognitiveCategoryAdminPageComponent } from './pages/cognitive-category-admin-page/cognitive-category-admin-page.component';
 import { ScoringRangesAdminPagesComponent } from './pages/scoring-ranges-admin-pages/scoring-ranges-admin-pages.component';
 import { TestResultAdminPagesComponent } from './pages/test-result-admin-pages/test-result-admin-pages.component';
+import { UserAdminModalComponent } from './pages/user-admin-page/user-admin-modal/user-admin-modal.component';
+import { RolAdminModalComponent } from './pages/rol-admin-page/rol-admin-modal/rol-admin-modal.component';
+import { User } from '../auth/interfaces/user.interface';
+import { UserAdminPageComponent } from './pages/user-admin-page/user-admin-page.component';
+import { RolAdminPageComponent } from './pages/rol-admin-page/rol-admin-page.component';
 
 export const adminDashboardRoutes: Routes = [
   {
@@ -37,6 +42,14 @@ export const adminDashboardRoutes: Routes = [
       {
         path: 'testResults',
         component: TestResultAdminPagesComponent,
+      },
+      {
+        path:'users',
+        component:UserAdminPageComponent,
+      },
+      {
+        path:'roles',
+        component:RolAdminPageComponent,
       },
       {
         path: '**',

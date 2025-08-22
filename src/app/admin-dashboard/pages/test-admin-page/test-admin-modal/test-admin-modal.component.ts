@@ -15,12 +15,11 @@ import { firstValueFrom } from 'rxjs';
 import { TestsService } from '@admin-dashboard/services/tests.service';
 import { NotificationService } from '@shared/services/notification.service';
 import { CommonModule } from '@angular/common';
-import { handle } from 'src/app/utils/handle.helper';
 import { TestImagePipe } from '@test/pipes/test-image.pipe';
-import {
-  ImageUploadComponent,
-} from '@shared/components/image-upload/image-upload.component';
+import { ImageUploadComponent } from '@shared/components/image-upload/image-upload.component';
 import { ImageUrl } from '@shared/interfaces/ImageUrl';
+import { FormErrorService } from '@shared/services/form-error.service';
+import { submitForm } from 'src/app/utils/submit-form.helper';
 @Component({
   selector: 'app-test-admin-modal',
   imports: [
@@ -34,7 +33,6 @@ import { ImageUrl } from '@shared/interfaces/ImageUrl';
   templateUrl: './test-admin-modal.component.html',
 })
 export class TestAdminModalComponent {
-  constructor(private notificationService: NotificationService) {}
   @Output() refreshTrigger = new EventEmitter<boolean>();
   pipe = new TestImagePipe();
 
@@ -42,13 +40,14 @@ export class TestAdminModalComponent {
   submitted = signal(false);
   previewImage = signal<ImageUrl>({ url: null });
   imageFile = signal<File | null>(null);
+  globalError = signal('');
 
   private fb = inject(FormBuilder);
   testsService = inject(TestsService);
+  formErrorService = inject(FormErrorService);
 
   test = signal<Test | null>(null);
   currentTest = this.test();
-  isNew = !this.currentTest || this.currentTest.id === 'new';
 
   testTypeOptions = Object.keys(TestType)
     .filter((key) => isNaN(Number(key)))
@@ -78,6 +77,7 @@ export class TestAdminModalComponent {
     });
     this.clearImage();
   }
+  constructor(private notificationService: NotificationService) {}
 
   async loadTest(id: string) {
     try {
@@ -110,47 +110,46 @@ export class TestAdminModalComponent {
   }
 
   async onSubmit() {
-    this.testForm.markAllAsTouched();
-    if (!this.testForm.valid) return;
-
     const formValue = this.testForm.value;
-    const testLike: Partial<Test> = { ...(formValue as any) };
-
-    const currentTest = this.test();
-    const isNew = !currentTest || currentTest.id === 'new';
-
-    const task = () => {
-      if (isNew) {
-        return firstValueFrom(
-          this.testsService.createTest(testLike, this.imageFile())
-        );
-      } else {
-        return firstValueFrom(
-          this.testsService.updateTest(
-            currentTest!.id,
-            testLike,
-            this.imageFile()
+    const valueLike: Partial<Test> = { ...(formValue as any) };
+    const current = this.test();
+    const isNew = !current || current.id === 'new';
+    console.log('valueLike' + valueLike);
+    const task = () =>
+      isNew
+        ? firstValueFrom(
+            this.testsService.createTest(valueLike, this.imageFile())
           )
-        );
-      }
-    };
+        : firstValueFrom(
+            this.testsService.updateTest(
+              current!.id,
+              valueLike,
+              this.imageFile()
+            )
+          );
 
-    await handle(
+    console.log('submitForm');
+    const result = await submitForm(
+      this.testForm,
       task,
-      'Test saved successfully',
       this.notificationService,
-      'Failed to save test'
+      'Test saved successfully',
+      'Failed to save Test',
+      this.formErrorService,
+      (msg) => this.globalError.set(msg)
     );
 
-    this.closeModal();
-    this.resetForm();
-    this.refreshTrigger.emit();
+    if (result) {
+      this.closeModal();
+      this.resetForm();
+      this.refreshTrigger.emit(true);
+    }
   }
 
   onImageChanged(file: File | null) {
     this.imageFile.set(file);
 
-    if (file) {
+    if (!file) {
       this.imageUrlControl.setValue('');
     }
   }

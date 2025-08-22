@@ -32,8 +32,9 @@ import { NotificationService } from '@shared/services/notification.service';
 import { CognitiveCategoryService } from '@admin-dashboard/services/cognitive-category.service';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 import { TestAdminModalComponent } from '../test-admin-page/test-admin-modal/test-admin-modal.component';
-import { CognitiveCategoryAdminModalComponent } from "./cognitive-category-admin-modal/cognitive-category-admin-modal.component";
+import { CognitiveCategoryAdminModalComponent } from './cognitive-category-admin-modal/cognitive-category-admin-modal.component';
 import { CognitiveCategory } from '@shared/interfaces/cognitve-category';
+import { enumToOptions } from 'src/app/utils/enum-utils';
 
 @Component({
   selector: 'app-cognitive-category-admin-page',
@@ -66,8 +67,8 @@ import { CognitiveCategory } from '@shared/interfaces/cognitve-category';
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    CognitiveCategoryAdminModalComponent
-],
+    CognitiveCategoryAdminModalComponent,
+  ],
   templateUrl: './cognitive-category-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
@@ -80,12 +81,17 @@ export class CognitiveCategoryAdminPageComponent {
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
-
+  testTypeOptions = [ ...enumToOptions(TestType)];
   columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'code', label: 'Code' },
-    { key: 'description', label: 'Description' },
-    { key: 'testTypeId', label: 'Test Type' },
+    { key: 'name', label: 'Name', filterType: 'text' },
+    { key: 'code', label: 'Code', filterType: 'text' },
+    { key: 'description', label: 'Description', filterType: 'text' },
+    {
+      key: 'testTypeId',
+      label: 'Test Type',
+      filterType: 'dropdown',
+      options: this.testTypeOptions,
+    },
   ];
   pageSize = signal(10);
   pageNumber = signal(1);
@@ -150,16 +156,26 @@ export class CognitiveCategoryAdminPageComponent {
     const current = { ...this.filters() };
     current[field] = value;
     this.filters.set(current);
-    this.pageNumber.set(1);
   }
 
   onTableFilter(event: any): void {
     const filters = event?.filters || {};
-    this.isFiltering.set(
-      Object.values(filters).some(
-        (f: any) => f?.value?.toString().trim() !== ''
-      )
-    );
+    const activeFilters: { [key: string]: string } = {};
+
+    for (const field in filters) {
+      const filterItem = filters[field][0]?.value;
+
+      if (filterItem !== undefined && filterItem !== null) {
+        const value =
+          typeof filterItem === 'object' && filterItem.value !== undefined
+            ? filterItem.value
+            : filterItem;
+
+        activeFilters[field] = value.toString();
+      }
+    }
+
+    this.filters.set(activeFilters);
   }
 
   onRefresh() {

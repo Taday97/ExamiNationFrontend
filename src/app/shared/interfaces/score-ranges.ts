@@ -1,4 +1,4 @@
-import { Filters, TestType } from './test.interface';
+import { TestType } from './test.interface';
 
 export interface ScoreRangesResponse {
   success: boolean;
@@ -14,7 +14,7 @@ export interface ScoreRanges {
   pageSize: number;
   sortBy: null;
   sortDescending: boolean;
-  filters: Filters;
+  filters?: { [key: string]: string };
 }
 
 export interface ScoreRange {

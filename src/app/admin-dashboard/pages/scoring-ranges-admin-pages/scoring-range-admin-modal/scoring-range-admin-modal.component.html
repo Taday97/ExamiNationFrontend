@@ -25,8 +25,7 @@
           class="mt-1 w-full px-3 py-2 text-sm rounded-md border border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-gray-400"
           placeholder="0" />
         <form-error-label [control]="scoreRangeForm.get('minScore')!" />
-        <span *ngIf="scoreRangeForm.errors && scoreRangeForm.errors['minLessThanOrEqualMax']"
-          class="text-red-500 text-xs">{{ scoreRangeForm.errors['minLessThanOrEqualMax'] }}</span>
+        <form-error-label [control]="scoreRangeForm" />
       </div>
       <div>
         <label for="maxScore" class="block text-sm font-medium text-gray-700">

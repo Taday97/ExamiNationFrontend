@@ -57,6 +57,7 @@ import { OptionService } from '@admin-dashboard/services/options.service';
 import { OptionResponse } from '@shared/interfaces/option.interface';
 import { QuestionsService } from '@shared/services/questions.service';
 import { CognitiveCategoriesResponse } from '@shared/interfaces/cognitve-category';
+import { toDropdownOptions } from 'src/app/utils/toDropdownOptions';
 
 @Component({
   selector: 'app-admin-questions-table',
@@ -102,14 +103,18 @@ export class QuestionAdminPageComponent implements OnInit {
   modal!: QuestionAdminModalComponent;
 
   private fb = inject(FormBuilder);
-  columns = [
-    { key: 'questionNumber', label: 'Nº' },
-    { key: 'text', label: 'Question' },
-    { key: 'type', label: 'Type' },
-    { key: 'questionName', label: 'Test' },
-    { key: 'cognitiveCategoryName', label: 'Category' },
-    { key: 'score', label: 'Score' },
-  ];
+
+  // columns = [
+  //   { key: 'name', label: 'Test Name', filterType: 'text' },
+  //   { key: 'description', label: 'Description', filterType: 'text' },
+  //   {
+  //     key: 'type',
+  //     label: 'Type',
+  //     filterType: 'dropdown',
+  //     options: this.testTypeOptions,
+  //   },
+  //   { key: 'createdAt', label: 'Created Date', filterType: 'date' },
+  // ];
   loading = signal(false);
   totalRecords = 0;
   isFiltering = signal(false);
@@ -151,16 +156,49 @@ export class QuestionAdminPageComponent implements OnInit {
   categoriesService = inject(CognitiveCategoryService);
   optionsService = inject(OptionService);
 
-
   tests = signal<TestsResponse | null>(null);
   cognitiveCategories = signal<CognitiveCategoriesResponse | null>(null);
+  testOptions = signal<{ label: string; value: any }[]>([]);
+  categoryOptions = signal<{ label: string; value: any }[]>([]);
+  questionTypeOptions = [
+    ...enumToOptions(QuestionType),
+  ];
+  columns = [
+    { key: 'questionNumber', label: 'Nº', filterType: 'text' },
+    { key: 'text', label: 'Question', filterType: 'text' },
+    {
+      key: 'type',
+      label: 'Type',
+      filterType: 'dropdown',
+      options: this.questionTypeOptions,
+    },
+    { key: 'testId', label: 'Test', filterType: 'dropdown', options: [] },
+    {
+      key: 'cognitiveCategoryId',
+      label: 'Category',
+      filterType: 'dropdown',
+      options: [],
+    },
+    { key: 'score', label: 'Score', filterType: 'numeric' },
+  ];
 
   ngOnInit() {
-    this.testsService.getAll().subscribe((t) => this.tests.set(t));
-    this.categoriesService
-      .getAll()
-      .subscribe((c) => this.cognitiveCategories.set(c));
+    this.testsService.getAll().subscribe((t) => {
+      this.tests.set(t);
+      const options = toDropdownOptions(t.data, 'name', 'id');
+      this.testOptions.set(options);
+      this.columns.find((col) => col.key === 'testId')!.options = options;
+    });
+
+    this.categoriesService.getAll().subscribe((c) => {
+      this.cognitiveCategories.set(c);
+      const options = toDropdownOptions(c.data, 'name', 'id');
+      this.categoryOptions.set(options);
+      this.columns.find((col) => col.key === 'cognitiveCategoryId')!.options =
+        options;
+    });
   }
+
   questionsResource = rxResource({
     request: computed(() => ({
       pageNumber: this.pageNumber(),
@@ -212,11 +250,22 @@ export class QuestionAdminPageComponent implements OnInit {
 
   onTableFilter(event: any): void {
     const filters = event?.filters || {};
-    this.isFiltering.set(
-      Object.values(filters).some(
-        (f: any) => f?.value?.toString().trim() !== ''
-      )
-    );
+    const activeFilters: { [key: string]: string } = {};
+
+    for (const field in filters) {
+      const filterItem = filters[field][0]?.value;
+
+      if (filterItem !== undefined && filterItem !== null) {
+        const value =
+          typeof filterItem === 'object' && filterItem.value !== undefined
+            ? filterItem.value
+            : filterItem;
+
+        activeFilters[field] = value.toString();
+      }
+    }
+
+    this.filters.set(activeFilters);
   }
 
   onRefresh() {

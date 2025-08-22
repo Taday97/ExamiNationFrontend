@@ -33,17 +33,19 @@ import { CardModule } from 'primeng/card';
 import { DeleteConfirmDialogComponent } from '@admin-dashboard/components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from '@shared/services/notification.service';
-import { ScoreRangesService } from '@admin-dashboard/services/score-ranges.service';
+import { UsersService } from '@admin-dashboard/services/users.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TestUiService } from '@admin-dashboard/services/test-ui.service';
 import { QuestionAdminModalComponent } from '../question-admin-page/question-admin-modal/question-admin-modal.component';
-import { ScoringRangeAdminModalComponent } from './scoring-range-admin-modal/scoring-range-admin-modal.component';
-import { ScoreRange } from '@shared/interfaces/score-ranges';
+import { User } from '@shared/interfaces/users.interface';
 import { TestsService } from '@admin-dashboard/services/tests.service';
 import { toDropdownOptions } from 'src/app/utils/toDropdownOptions';
+import { UserAdminModalComponent } from './user-admin-modal/user-admin-modal.component';
+import { RolesService } from '@admin-dashboard/services/roles.service';
+import { RolesResponse } from '@shared/interfaces/roles.interface';
 
 @Component({
-  selector: 'app-scoring-ranges-admin-pages',
+  selector: 'app-user-admin-page',
   imports: [
     TableModule,
     ButtonModule,
@@ -73,16 +75,16 @@ import { toDropdownOptions } from 'src/app/utils/toDropdownOptions';
     ReactiveFormsModule,
     ToastModule,
     DeleteConfirmDialogComponent,
-    ScoringRangeAdminModalComponent,
-  ],
-  templateUrl: './scoring-ranges-admin-pages.component.html',
+    UserAdminModalComponent
+],
+  templateUrl: './user-admin-page.component.html',
   providers: [MessageService, NotificationService],
 })
-export class ScoringRangesAdminPagesComponent implements OnInit {
+export class UserAdminPageComponent implements OnInit {
   @ViewChild(DeleteConfirmDialogComponent)
   deleteDialog!: DeleteConfirmDialogComponent;
-  @ViewChild(ScoringRangeAdminModalComponent)
-  modal!: ScoringRangeAdminModalComponent;
+  @ViewChild(UserAdminModalComponent)
+  modal!: UserAdminModalComponent;
 
   loading = signal(false);
   totalRecords = 0;
@@ -96,27 +98,31 @@ export class ScoringRangesAdminPagesComponent implements OnInit {
   refreshTrigger = signal(false);
 
   testUiService = inject(TestUiService);
-  testsService = inject(TestsService);
-  scoreRangesService = inject(ScoreRangesService);
-  tests = signal<TestsResponse | null>(null);
-  testOptions = signal<{ label: string; value: any }[]>([]);
+  rolesService = inject(RolesService);
+  UsersService = inject(UsersService);
+  roles = signal<RolesResponse | null>(null);
+  rolesOptions = signal<{ label: string; value: any }[]>([]);
+  emailConfirmed = [
+    { label: 'Confirmed', value: true },
+    { label: 'Not Confirmed', value: false },
+  ];
   columns = [
+    { key: 'userName', label: 'User', filterType: 'text' },
     {
-      key: 'testId',
-      label: 'Test',
+      key: 'roles',
+      label: 'Roles',
       filterType: 'dropdown',
-      options: this.testOptions(),
+      options: this.rolesOptions(),
     },
-    { key: 'minScore', label: 'Score Range', filterType: 'numeric' },
-    { key: 'classification', label: 'Classification', filterType: 'text' },
-    { key: 'shortDescription', label: 'Short Description', filterType: 'text' },
+    { key: 'emailConfirmed', label: 'Email Confirmed',  filterType: 'dropdown', options: this.emailConfirmed },
+
   ];
   ngOnInit() {
-    this.testsService.getAll().subscribe((t) => {
-      this.tests.set(t);
+    this.rolesService.getAll().subscribe((t) => {
+      this.roles.set(t);
       const options = toDropdownOptions(t.data, 'name', 'id');
-      this.testOptions.set(options);
-      this.columns.find((col) => col.key === 'testId')!.options = options;
+      this.rolesOptions.set(options);
+      this.columns.find((col) => col.key === 'roles')!.options = options;
     });
   }
 
@@ -132,14 +138,13 @@ export class ScoringRangesAdminPagesComponent implements OnInit {
     loader: ({ request }) => {
       this.loading.set(true);
       console.log('Filters:', request.filters);
-      return this.scoreRangesService.getPage(request).pipe(
+      return this.UsersService.getPage(request).pipe(
         map((res) => {
           this.loading.set(false);
           this.totalRecords = res.data.totalCount;
           console.log(res.data.items);
           const enrichedItems = res.data.items.map((item, index) => ({
             ...item,
-            testTypeData: this.testUiService.getTestTypeData(item.testType),
             randomColor: this.testUiService.getRandomColor(index),
           }));
 
@@ -200,8 +205,8 @@ export class ScoringRangesAdminPagesComponent implements OnInit {
     this.refreshTrigger.update((prev) => !prev);
   }
 
-  openEditModal(scoreRange?: ScoreRange) {
-    this.modal.openModal(scoreRange);
+  openEditModal(User?: User) {
+    this.modal.openModal(User);
   }
 
   openDeleteModal(id: string) {
