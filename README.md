@@ -1,59 +1,110 @@
-# ExamiNationFronted
+# 🧠 IQ Test Platform
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+![Angular](https://img.shields.io/badge/Angular-19-dd0031?logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-## Development server
+An interactive IQ test platform built with **Angular 19**.  
+Users can take categorized IQ tests, get detailed performance insights, and admins can manage content, users, and analytics through a secure dashboard.
 
-To start a local development server, run:
+👉 Backend Repository: [link here](https://github.com/Taday97/ExamiNation)
 
+---
+
+## 📑 Table of Contents
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [⚡ Getting Started](#-getting-started)
+- [🚀 Usage](#-usage)
+- [📸 Screenshots](#-screenshots)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+
+---
+
+## ✨ Features
+
+### 👤 User
+- Browse available tests and take them question by question.
+- Detailed results:
+  - Total score (e.g., `35/50`)
+  - Overall performance level (e.g., *Above Average*)
+  - Test duration & completion stats
+  - Category breakdown (Logic, Verbal, Memory, Math)
+  - Insights + personalized recommendations
+- View personal test history and progress.
+
+### 🛡️ Admin
+- **Role-based dashboard** with protected routes.
+- CRUD for tests, questions & categories.
+- Define valid score ranges & result interpretations.
+- Manage users and assign roles.
+- View aggregated user results with filters & export options.
+
+### 🔒 Security
+- Google OAuth & email/password login.
+- Role-based access control (RBAC).
+- Global error handling & interceptors.
+
+### ⚡ Technical Highlights
+- Responsive & mobile-first design.
+- Lazy-loaded modules for performance.
+- State management with services/NgRx.
+- Integration with backend REST APIs.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Angular 19, TypeScript, RxJS, Angular Router, Angular HttpClient  
+- **UI**: Angular Material / Bootstrap (customizable)  
+- **Auth**: Google OAuth / JWT-based  
+- **Other**: HTTP interceptors, Reactive forms  
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+- Node.js >= 18  
+- Angular CLI >= 19  
+- Backend API (running locally or deployed)
+
+### Installation
 ```bash
+# Clone the repo
+git clone https://github.com/Taday97/ExamiNationFrontend.git
+cd ExamiNation
+
+# Install dependencies
+npm install
+
+# Run the app
 ng serve
+
 ```
+## 📸 Screenshots
+### 🔑 Login Page
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+![Login with Google](https://github.com/user-attachments/assets/2961feb6-bb6c-441d-8da8-6851f73df1df)
 
-## Code scaffolding
+### 🏠 Homepage
+![Homepage](https://github.com/user-attachments/assets/fb56ce95-6811-44cc-b1cb-a72699f40bbe
+)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 📝 Taking a Test
+![Test View](https://github.com/user-attachments/assets/84b8f840-1eb2-4d1b-8733-46c8e96bab3f)
 
-```bash
-ng generate component component-name
-```
+### 📝 My Tests
+![Test View](https://github.com/user-attachments/assets/d9ec9bd6-16da-48d7-8651-88b04fc0ad67)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
-```
+### 📊 Results Page
+![Results](https://github.com/user-attachments/assets/a3e18c6e-97a8-49ca-ab3b-23ff0ebd5e5e)
 
-## Building
+### ⚙️ Admin Dashboard
+![Admin Dashboard](https://github.com/user-attachments/assets/ea257091-b122-46d2-bb7c-769f4077277a
+)
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 📈 Admin Results with Filters
+![Admin Results](https://github.com/user-attachments/assets/7a28c9e0-e040-487c-9591-257739ce2345)
