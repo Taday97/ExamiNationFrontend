@@ -75,7 +75,7 @@ The backend for this project is hosted in a separate repository: [Link to Backen
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/iq-test-platform.git
+   git clone https://github.com/Taday97/ExamiNation.git
    cd iq-test-platform
    ```
 
@@ -118,14 +118,12 @@ The backend for this project is hosted in a separate repository: [Link to Backen
 ## Screenshots
 
 Here are some screenshots of the application:
-
-![Homepage with Available Tests](<img width="1198" height="1251" alt="image" src="https://github.com/user-attachments/assets/f73376ab-14de-4b68-b00d-ecddd2d647b4" />)  
-![Taking a Test - Question View](<img width="1065" height="574" alt="image" src="https://github.com/user-attachments/assets/84b8f840-1eb2-4d1b-8733-46c8e96bab3f" />
+![Homepage with Available Tests](https://github.com/user-attachments/assets/f73376ab-14de-4b68-b00d-ecddd2d647b4)  
+![Taking a Test - Question View](https://github.com/user-attachments/assets/84b8f840-1eb2-4d1b-8733-46c8e96bab3f)  
+![Results Page](https://github.com/user-attachments/assets/a3e18c6e-97a8-49ca-ab3b-23ff0ebd5e5e)  
+![Admin Dashboard - Test Management](https://github.com/user-attachments/assets/67a5b77a-8767-44df-bab1-d5f47d2c71c8
 )  
-![Results Page](<img width="797" height="1066" alt="image" src="https://github.com/user-attachments/assets/a3e18c6e-97a8-49ca-ab3b-23ff0ebd5e5e" />)  
-![Admin Dashboard - Test Management](<img width="1213" height="1266" alt="image" src="https://github.com/user-attachments/assets/67a5b77a-8767-44df-bab1-d5f47d2c71c8" />
-)  
-![Admin Results View with Filters](<img width="989" height="861" alt="image" src="https://github.com/user-attachments/assets/7a28c9e0-e040-487c-9591-257739ce2345" />
+![Admin Results View with Filters](https://github.com/user-attachments/assets/7a28c9e0-e040-487c-9591-257739ce2345
 )  
 
 ## Contributing
