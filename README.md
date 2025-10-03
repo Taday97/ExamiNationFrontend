@@ -7,7 +7,7 @@
 An interactive IQ test platform built with **Angular 19**.  
 Users can take categorized IQ tests, get detailed performance insights, and admins can manage content, users, and analytics through a secure dashboard.
 
-👉 Backend Repository: [link here](https://github.com/yourusername/backend-repo)
+👉 Backend Repository: [link here](https://github.com/Taday97/ExamiNation)
 
 ---
 
@@ -73,7 +73,7 @@ Users can take categorized IQ tests, get detailed performance insights, and admi
 ### Installation
 ```bash
 # Clone the repo
-git clone https://github.com/Taday97/ExamiNation.git
+git clone https://github.com/Taday97/ExamiNationFrontend.git
 cd ExamiNation
 
 # Install dependencies
