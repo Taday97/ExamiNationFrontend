@@ -15,10 +15,7 @@ Users can take categorized IQ tests, get detailed performance insights, and admi
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [⚡ Getting Started](#-getting-started)
-- [🚀 Usage](#-usage)
 - [📸 Screenshots](#-screenshots)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
 
 ---
 
@@ -57,7 +54,7 @@ Users can take categorized IQ tests, get detailed performance insights, and admi
 ## 🛠️ Tech Stack
 
 - **Frontend**: Angular 19, TypeScript, RxJS, Angular Router, Angular HttpClient  
-- **UI**: Angular Material / Bootstrap (customizable)  
+- **UI**: Tailwind CSS + DaisyUI (customizable, responsive design)  
 - **Auth**: Google OAuth / JWT-based  
 - **Other**: HTTP interceptors, Reactive forms  
 
